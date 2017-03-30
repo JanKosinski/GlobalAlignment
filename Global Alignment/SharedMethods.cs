@@ -71,7 +71,6 @@ namespace Global_Alignment
 
         public static bool compareNucleotidesIUPAC(List<char> _nucleotides)
         {    // returns true when there is no conflict between IUPAC characters in list
-            bool identity;
             List<char> items;
             if (_nucleotides.Contains('A') || _nucleotides.Contains('T') || _nucleotides.Contains('U') || _nucleotides.Contains('G') || _nucleotides.Contains('C'))
             {
