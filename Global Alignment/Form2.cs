@@ -12,14 +12,11 @@ namespace Global_Alignment
 {
     public partial class Form2 : Form
     {
-        public Form2()
+        private Form1 form1 = null;
+        public Form2(Form1 _form1)
         {
             InitializeComponent();
-        }
-
-        private void Form2_Load(object sender, EventArgs e)
-        {
-
+            form1 = _form1;
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -33,9 +30,23 @@ namespace Global_Alignment
         }
 
         private void form2_ok_Click(object sender, EventArgs e)
-        {
+        {   
             if (validateFields())
             {
+                if (randomSequenceRadioButton.Checked) {
+                    string randomSequence;
+                    string sequencesToTextBox = "";
+                    randomSequence = SharedMethods.randomNucleotideSequence(Convert.ToUInt32(seqLenNumericUpDown.Value)*2);
+                    List<string> sequences = new List<string>();
+                    sequences = InstanceGenerator.createInstance(randomSequence, 5);
+                    for (int i = 0; i < sequences.Count; i++) {
+                        sequencesToTextBox += sequences[i] + Environment.NewLine;
+                    }
+                    this.form1.instanceTextBox.Text += "Reference Sequence" + randomSequence + Environment.NewLine;
+                    this.form1.instanceTextBox.Text += sequencesToTextBox;
+                    
+                }
+                this.form1.Enabled = true;
                 this.Close();
             }
             else { } //TODO change label color where condition is not fulfilled

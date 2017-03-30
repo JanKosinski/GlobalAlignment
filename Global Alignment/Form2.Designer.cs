@@ -49,11 +49,6 @@
             // 
             // seqLenNumericUpDown
             // 
-            this.seqLenNumericUpDown.Increment = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
             this.seqLenNumericUpDown.Location = new System.Drawing.Point(31, 72);
             this.seqLenNumericUpDown.Maximum = new decimal(new int[] {
             1000,
@@ -61,7 +56,7 @@
             0,
             0});
             this.seqLenNumericUpDown.Minimum = new decimal(new int[] {
-            10,
+            5,
             0,
             0,
             0});
@@ -139,7 +134,6 @@
             this.Controls.Add(this.label1);
             this.Name = "Form2";
             this.Text = "Form2";
-            this.Load += new System.EventHandler(this.Form2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.seqLenNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -8,33 +8,33 @@ namespace Global_Alignment
 {
     static class SharedMethods
     {
-        public static List<bool> randomBooleanVector(uint _vectorLength, uint _numOfPositives) {
-            List<bool> randomVector = new List<bool>();
-            Random random = new Random(); // time based "random" numbers
-            int randomInt;
-            int positives = 0;
-            for (uint i = 0; i < _vectorLength; i++) {
-                if (positives == _numOfPositives)
-                {
-                    randomVector.Add(false);
-                    continue;
-                }
-                randomInt = random.Next(2);
-                switch (randomInt) {
-                    case 0:
-                        randomVector.Add(false);
-                        break;
-                    case 1:
-                        randomVector.Add(true);
-                        positives++;
-                        break;
-                }
+        public static List<bool> createRandomBooleanVector(int _vectorLength, uint _numberOfTrues, Random _rnd)
+        {
+            List<bool> myVector = new List<bool>();
+            int randomNumber;
+            List<int> tIndexes = new List<int>();   // list of indexes in myVector where trues should be inserted
+            for (int i = 0; i < _vectorLength; i++)
+            {   // initializing vector with false values
+                myVector.Add(false);
             }
-            return randomVector;
+            for (int j = 0; j < _numberOfTrues; j++)
+            {  // lottery where trues should be inserted
+                randomNumber = _rnd.Next(_vectorLength);
+                while (tIndexes.Contains(randomNumber))
+                { // if index already exists in myVector
+                    randomNumber = _rnd.Next(_vectorLength);
+                }
+                tIndexes.Add(randomNumber);
+            }
+            for (int k = 0; k < tIndexes.Count; k++)
+            {
+                myVector[tIndexes[k]] = true;   // inserting true values 
+            }
+            return myVector;
         }
 
-        public static List<char> randomNucleotideSequence(uint _sequenceLength, string _type="dna") {
-            List<char> randomSequence = new List<char>();
+        public static string randomNucleotideSequence(uint _sequenceLength, string _type="dna") {
+            string seq = "";
             Random random = new Random(); // time based "random" numbers
             int randomInt;
             char nucleotide = 'N';
@@ -54,9 +54,9 @@ namespace Global_Alignment
                         nucleotide = 'C';
                         break;
                 }
-                randomSequence.Add(nucleotide);
+                seq+=nucleotide;
             }
-            return randomSequence;
+            return seq;
         }
 
         public static bool misMatch(List<char>_nucleotides, List<char>_items)

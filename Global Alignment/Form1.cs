@@ -24,8 +24,9 @@ namespace Global_Alignment
 
         private void randomButton_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2();
+            Form2 form2 = new Form2(this);
             form2.Show();
+            this.Enabled = false;
         }
     }
 }
