@@ -30,20 +30,21 @@ namespace Global_Alignment
         }
 
         private void form2_ok_Click(object sender, EventArgs e)
-        {   
+        {
+            Sequence seq;
             if (validateFields())
             {
                 if (randomSequenceRadioButton.Checked) {
                     string randomSequence;
-                    string sequencesToTextBox = "";
+                    //string sequencesToTextBox = "";
                     randomSequence = SharedMethods.randomNucleotideSequence(Convert.ToUInt32(seqLenNumericUpDown.Value)*2);
                     List<string> sequences = new List<string>();
-                    sequences = InstanceGenerator.createInstance(randomSequence, 5);
+                    sequences = InstanceGenerator.createInstance(randomSequence, Convert.ToUInt32(numberOfSequencesNumericUpDown.Value));
                     for (int i = 0; i < sequences.Count; i++) {
-                        sequencesToTextBox += sequences[i] + Environment.NewLine;
+                        this.form1.dt.Rows.Add(new object[] { "change_me", sequences[i]});
                     }
-                    this.form1.instanceTextBox.Text += "Reference Sequence" + randomSequence + Environment.NewLine;
-                    this.form1.instanceTextBox.Text += sequencesToTextBox;
+                    //this.form1.instanceTextBox.Text += "Reference Sequence" + randomSequence + Environment.NewLine;
+                    //this.form1.instanceTextBox.Text += sequencesToTextBox;
                     
                 }
                 this.form1.Enabled = true;

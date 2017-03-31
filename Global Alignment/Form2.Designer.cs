@@ -35,7 +35,10 @@
             this.referenceSequenceRadioButton = new System.Windows.Forms.RadioButton();
             this.randomSequenceRadioButton = new System.Windows.Forms.RadioButton();
             this.form2_ok = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numberOfSequencesNumericUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.seqLenNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numberOfSequencesNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -120,11 +123,39 @@
             this.form2_ok.UseVisualStyleBackColor = true;
             this.form2_ok.Click += new System.EventHandler(this.form2_ok_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(97, 181);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(182, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Number of Sequences To Genaerate";
+            // 
+            // numberOfSequencesNumericUpDown
+            // 
+            this.numberOfSequencesNumericUpDown.Location = new System.Drawing.Point(31, 174);
+            this.numberOfSequencesNumericUpDown.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numberOfSequencesNumericUpDown.Name = "numberOfSequencesNumericUpDown";
+            this.numberOfSequencesNumericUpDown.Size = new System.Drawing.Size(60, 20);
+            this.numberOfSequencesNumericUpDown.TabIndex = 8;
+            this.numberOfSequencesNumericUpDown.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.numberOfSequencesNumericUpDown);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.form2_ok);
             this.Controls.Add(this.randomSequenceRadioButton);
             this.Controls.Add(this.referenceSequenceRadioButton);
@@ -135,6 +166,7 @@
             this.Name = "Form2";
             this.Text = "Form2";
             ((System.ComponentModel.ISupportInitialize)(this.seqLenNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numberOfSequencesNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -149,5 +181,7 @@
         private System.Windows.Forms.RadioButton referenceSequenceRadioButton;
         private System.Windows.Forms.RadioButton randomSequenceRadioButton;
         private System.Windows.Forms.Button form2_ok;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numberOfSequencesNumericUpDown;
     }
 }

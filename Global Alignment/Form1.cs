@@ -12,9 +12,15 @@ namespace Global_Alignment
 {
     public partial class Form1 : Form
     {
+        public DataTable dt;
         public Form1()
         {
             InitializeComponent();
+            dt = new DataTable();
+            dt.Columns.Add(new DataColumn("Sequence ID", typeof(string)));
+            dt.Columns.Add(new DataColumn("Sequence", typeof(string)));
+            
+            dataGridView.DataSource = dt;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -27,6 +33,11 @@ namespace Global_Alignment
             Form2 form2 = new Form2(this);
             form2.Show();
             this.Enabled = false;
+        }
+
+        private void loadButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

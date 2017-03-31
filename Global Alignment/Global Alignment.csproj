@@ -66,6 +66,7 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sequence.cs" />
     <Compile Include="InstanceGenerator.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

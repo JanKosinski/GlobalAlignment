@@ -28,20 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.instanceTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.loadButton = new System.Windows.Forms.Button();
             this.randomButton = new System.Windows.Forms.Button();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.saveToFASTAButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // instanceTextBox
-            // 
-            this.instanceTextBox.Location = new System.Drawing.Point(12, 32);
-            this.instanceTextBox.Multiline = true;
-            this.instanceTextBox.Name = "instanceTextBox";
-            this.instanceTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.instanceTextBox.Size = new System.Drawing.Size(675, 252);
-            this.instanceTextBox.TabIndex = 0;
             // 
             // label1
             // 
@@ -56,33 +49,58 @@
             // 
             this.loadButton.Location = new System.Drawing.Point(15, 307);
             this.loadButton.Name = "loadButton";
-            this.loadButton.Size = new System.Drawing.Size(286, 23);
+            this.loadButton.Size = new System.Drawing.Size(164, 23);
             this.loadButton.TabIndex = 2;
             this.loadButton.Text = "Upload FASTA";
             this.loadButton.UseVisualStyleBackColor = true;
+            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
             // 
             // randomButton
             // 
-            this.randomButton.Location = new System.Drawing.Point(323, 307);
+            this.randomButton.Location = new System.Drawing.Point(473, 307);
             this.randomButton.Name = "randomButton";
-            this.randomButton.Size = new System.Drawing.Size(345, 23);
+            this.randomButton.Size = new System.Drawing.Size(195, 23);
             this.randomButton.TabIndex = 3;
             this.randomButton.Text = "Random Input";
             this.randomButton.UseVisualStyleBackColor = true;
             this.randomButton.Click += new System.EventHandler(this.randomButton_Click);
             // 
+            // dataGridView
+            // 
+            this.dataGridView.AllowUserToOrderColumns = true;
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Location = new System.Drawing.Point(12, 41);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.dataGridView.Size = new System.Drawing.Size(672, 251);
+            this.dataGridView.TabIndex = 4;
+            // 
+            // saveToFASTAButton
+            // 
+            this.saveToFASTAButton.Location = new System.Drawing.Point(198, 306);
+            this.saveToFASTAButton.Name = "saveToFASTAButton";
+            this.saveToFASTAButton.Size = new System.Drawing.Size(251, 23);
+            this.saveToFASTAButton.TabIndex = 5;
+            this.saveToFASTAButton.Text = "Save To FASTA";
+            this.saveToFASTAButton.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 355);
+            this.ClientSize = new System.Drawing.Size(699, 353);
+            this.Controls.Add(this.saveToFASTAButton);
+            this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.randomButton);
             this.Controls.Add(this.loadButton);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.instanceTextBox);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -92,7 +110,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.Button randomButton;
-        public System.Windows.Forms.TextBox instanceTextBox;
+        public System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.Button saveToFASTAButton;
     }
 }
 
