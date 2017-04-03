@@ -16,7 +16,8 @@ namespace Global_Alignment
     {
         public DataTable dt;
         public Form1()
-        {
+        {   
+            //TODO add sequence length to data grid view. Non editable
             InitializeComponent();
             dt = new DataTable();
             dt.Columns.Add(new DataColumn("Sequence ID", typeof(string)));
@@ -41,7 +42,6 @@ namespace Global_Alignment
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == DialogResult.OK) {
                 string path = ofd.FileName;
-                string temp = "";
                 string text = File.Exists(path) ? System.IO.File.ReadAllText(path) : "File doesn't exist error";    // reading from file; if file does not exist insert to text error message
                 if (text == "File doesn't exist error") { Console.WriteLine("File doesn't exist");  return;  }  // if file does not exist
                 Regex fastaRegex = new Regex(@"(>\S+\s+([atgcuryswkmbdhvnATGCURYSWKMBDHVN\s])+){2,}");  // fasta file validation. Fasta file must have at least 2 sequences
@@ -79,6 +79,71 @@ namespace Global_Alignment
 
             }
             
+        }
+
+
+
+        private bool validateDataTable() {  // sprawdza czy arkusz nie zawiera błedów. Jeżeli zawiera to zakreśl wiersz na czerwono
+            int seqLen = this.dataGridView.Rows[0].Cells[1].Value.ToString().Length;
+            Regex sequenceRegex;
+            Match sequenceMatch;
+            bool temp = false;
+            foreach (DataGridViewRow row in this.dataGridView.Rows)
+            {
+                row.DefaultCellStyle.BackColor = Color.White;   // przed walidacja ustawia wszystkie na biało. Żeby już poprawone wiersze nie były nadal czerwone
+            } 
+            foreach (DataGridViewRow row in this.dataGridView.Rows)
+            {
+                if (!row.IsNewRow) {    // jeżeli to nie jest nowy wiersz (osttani)
+                    if (row.Cells[1].Value.ToString().Length != seqLen) {   // jezeli wszytskie sekwencje nie sa rownej dlugosci
+                        temp = true;
+                    }
+                    sequenceRegex = new Regex(@"^[atgcuryswkmbdhvnATGCURYSWKMBDHVN\s]+$");  // sprawdzamy poprawnosc sekwencji
+                    sequenceMatch = sequenceRegex.Match(row.Cells[1].Value.ToString());
+                    if (sequenceMatch.Value.Trim() != row.Cells[1].Value.ToString().Trim() || row.Cells[0].Value.ToString().Length == 0 || row.Cells[1].Value.ToString().Length == 0)
+                    {   // jezeli cos jest nie tak to zmien kolor na czerwony
+                        row.DefaultCellStyle.BackColor = Color.Red;
+                        temp = true;
+                    }
+                }            
+            }
+            if (temp) {
+                return false;
+            }
+            return true;
+        }
+
+        private void saveToFASTAButton_Click(object sender, EventArgs e)    // zapis do pliku fasta
+        {
+            if (validateDataTable())    // jezeli datgridview nie zawiera bledow
+            {
+                OpenFileDialog ofd = new OpenFileDialog();  // wybieramy lokalizacje pliku
+                ofd.CheckFileExists = false;
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    string lines = "";
+                    string path = ofd.FileName;
+                    string replacedString = "";
+                    System.IO.StreamWriter file = new System.IO.StreamWriter(path);
+                    foreach (DataRow row in this.dt.Rows)
+                    {
+                        replacedString = Regex.Replace(row["Sequence ID"].ToString(), @"^>", "");   // usuwamy znaczek >, by uniknac jego dublowania
+                        lines += ">" + replacedString + Environment.NewLine;
+                        lines += row["Sequence"].ToString() + Environment.NewLine;
+                    }
+                    MessageBox.Show("Successfully saved");
+                    file.WriteLine(lines);  // zapisujemy do pliku
+                    file.Close();
+                }
+            }
+            else {
+                MessageBox.Show("Table contains errors. Please note that each sequence must be of equal length.");
+            }
+        }
+
+        private void dataGridView_RowValidating(object sender, DataGridViewCellCancelEventArgs e)   // walidacja wiersza
+        {
+            validateDataTable();
         }
     }
 }

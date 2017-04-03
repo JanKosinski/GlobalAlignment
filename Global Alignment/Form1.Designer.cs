@@ -77,6 +77,7 @@
             this.dataGridView.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.dataGridView.Size = new System.Drawing.Size(672, 251);
             this.dataGridView.TabIndex = 4;
+            this.dataGridView.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView_RowValidating);
             // 
             // saveToFASTAButton
             // 
@@ -86,6 +87,7 @@
             this.saveToFASTAButton.TabIndex = 5;
             this.saveToFASTAButton.Text = "Save To FASTA";
             this.saveToFASTAButton.UseVisualStyleBackColor = true;
+            this.saveToFASTAButton.Click += new System.EventHandler(this.saveToFASTAButton_Click);
             // 
             // Form1
             // 
