@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,30 +20,56 @@ namespace Global_Alignment
             form1 = _form1;
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void referenceSequenceRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (referenceSequenceRadioButton.Checked) { randomSequenceRadioButton.Checked = false; seqLenNumericUpDown.Enabled = false; refSeqTextBox.Enabled = true; }
+            if (referenceSequenceRadioButton.Checked) { randomSequenceRadioButton.Checked = false; seqLenNumericUpDown.Enabled = false; refSeqTextBox.Enabled = true; dnaCheckBox.Enabled = false; rnaCheckBox.Enabled = false; dnaCheckBox.Checked = false; rnaCheckBox.Checked = false; }
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void randomSequenceRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (randomSequenceRadioButton.Checked) { referenceSequenceRadioButton.Checked = false; refSeqTextBox.Enabled = false;  seqLenNumericUpDown.Enabled = true; }
+            if (randomSequenceRadioButton.Checked) { referenceSequenceRadioButton.Checked = false; refSeqTextBox.Enabled = false;  seqLenNumericUpDown.Enabled = true; dnaCheckBox.Enabled = true; rnaCheckBox.Enabled = true; dnaCheckBox.Checked = true; }
         }
 
         private void form2_ok_Click(object sender, EventArgs e)
         {
-            Sequence seq;
+            List<string> sequences = new List<string>();
+            string type = "dna";
+            if (dnaCheckBox.Checked)
+            {
+                type = "dna";
+            }
+            else {
+                type = "rna";
+            }
+            int numberOfErrors = Convert.ToInt32(errorsNumUpDown.Value);
+            int ord = 0;
             if (validateFields())
             {
-                if (randomSequenceRadioButton.Checked) {
+                if (randomSequenceRadioButton.Checked)
+                {
                     string randomSequence;
-                    randomSequence = SharedMethods.randomNucleotideSequence(Convert.ToUInt32(seqLenNumericUpDown.Value)*2);
-                    List<string> sequences = new List<string>();
-                    sequences = InstanceGenerator.createInstance(randomSequence, Convert.ToUInt32(numberOfSequencesNumericUpDown.Value));
-                    for (int i = 0; i < sequences.Count; i++) {
-                        this.form1.dt.Rows.Add(new object[] { "change_me", sequences[i]});
+                    randomSequence = SharedMethods.randomNucleotideSequence(Convert.ToUInt32(seqLenNumericUpDown.Value) * 2, type);
+                    sequences = InstanceGenerator.createInstance(randomSequence, Convert.ToUInt32(numberOfSequencesNumericUpDown.Value), Convert.ToUInt32(numberOfErrors), type);
+                    for (int i = 0; i < sequences.Count; i++)
+                    {
+                        ord++;
+                        this.form1.dt.Rows.Add(new object[] { "Sequence" + ord.ToString(), sequences[i] });
                     }
-                    
+
+                }
+                else {
+                    if (refSeqTextBox.Text.Contains('U')) {
+                        type = "rna";
+                    }
+                    else {
+                        type = "dna";
+                    }
+                    sequences = InstanceGenerator.createInstance(refSeqTextBox.Text, Convert.ToUInt32(numberOfSequencesNumericUpDown.Value), Convert.ToUInt32(numberOfErrors), type);
+                    for (int i = 0; i < sequences.Count; i++)
+                    {
+                        ord++;
+                        this.form1.dt.Rows.Add(new object[] { "Sequence" + ord.ToString(), sequences[i] });
+                    }
                 }
                 this.form1.Enabled = true;
                 this.Close();
@@ -51,9 +78,40 @@ namespace Global_Alignment
         }
 
         private bool validateFields() {
+            
             if (randomSequenceRadioButton.Checked) { return true; }
-            else if (refSeqTextBox.Text.Length >= 10) { return true;   } // TODO and contains only IUPAC characters. Show warning when something is wrong
+            else if (refSeqTextBox.Text.Length >= 10) {
+                Regex sequenceRegex = new Regex(@"^[atgcuryswkmbdhvnATGCURYSWKMBDHVN\s]+$");
+                Match match = sequenceRegex.Match(refSeqTextBox.Text);
+                if (match.Value.ToString().Trim().Length == refSeqTextBox.Text.Trim().Length)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            } // TODO checks if sequence doesnt contain U and T at one time
             return false;
+        }
+
+        private void rnaCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rnaCheckBox.Checked) {
+                dnaCheckBox.Checked = false;
+            }
+        }
+
+        private void dnaCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dnaCheckBox.Checked) {
+                rnaCheckBox.Checked = false;
+            }
+        }
+
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.form1.Enabled = true;
         }
     }
 }

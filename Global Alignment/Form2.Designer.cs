@@ -32,13 +32,19 @@
             this.seqLenNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.refSeqTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.referenceSequenceRadioButton = new System.Windows.Forms.RadioButton();
-            this.randomSequenceRadioButton = new System.Windows.Forms.RadioButton();
             this.form2_ok = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.numberOfSequencesNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.errorsNumUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.rnaCheckBox = new System.Windows.Forms.CheckBox();
+            this.dnaCheckBox = new System.Windows.Forms.CheckBox();
+            this.randomSequenceRadioButton = new System.Windows.Forms.CheckBox();
+            this.referenceSequenceRadioButton = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.seqLenNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfSequencesNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorsNumUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -75,7 +81,7 @@
             // refSeqTextBox
             // 
             this.refSeqTextBox.Enabled = false;
-            this.refSeqTextBox.Location = new System.Drawing.Point(31, 125);
+            this.refSeqTextBox.Location = new System.Drawing.Point(31, 108);
             this.refSeqTextBox.Name = "refSeqTextBox";
             this.refSeqTextBox.Size = new System.Drawing.Size(120, 20);
             this.refSeqTextBox.TabIndex = 2;
@@ -83,35 +89,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(157, 128);
+            this.label2.Location = new System.Drawing.Point(157, 115);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(109, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Reference Sequence";
-            // 
-            // referenceSequenceRadioButton
-            // 
-            this.referenceSequenceRadioButton.AutoSize = true;
-            this.referenceSequenceRadioButton.Location = new System.Drawing.Point(17, 30);
-            this.referenceSequenceRadioButton.Name = "referenceSequenceRadioButton";
-            this.referenceSequenceRadioButton.Size = new System.Drawing.Size(120, 17);
-            this.referenceSequenceRadioButton.TabIndex = 4;
-            this.referenceSequenceRadioButton.Text = "reference sequence";
-            this.referenceSequenceRadioButton.UseVisualStyleBackColor = true;
-            this.referenceSequenceRadioButton.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-            // 
-            // randomSequenceRadioButton
-            // 
-            this.randomSequenceRadioButton.AutoSize = true;
-            this.randomSequenceRadioButton.Checked = true;
-            this.randomSequenceRadioButton.Location = new System.Drawing.Point(143, 30);
-            this.randomSequenceRadioButton.Name = "randomSequenceRadioButton";
-            this.randomSequenceRadioButton.Size = new System.Drawing.Size(110, 17);
-            this.randomSequenceRadioButton.TabIndex = 5;
-            this.randomSequenceRadioButton.TabStop = true;
-            this.randomSequenceRadioButton.Text = "random sequence";
-            this.randomSequenceRadioButton.UseVisualStyleBackColor = true;
-            this.randomSequenceRadioButton.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // form2_ok
             // 
@@ -149,24 +131,109 @@
             0,
             0});
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(160, 144);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(85, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Number of errors";
+            // 
+            // errorsNumUpDown
+            // 
+            this.errorsNumUpDown.Location = new System.Drawing.Point(31, 144);
+            this.errorsNumUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.errorsNumUpDown.Name = "errorsNumUpDown";
+            this.errorsNumUpDown.Size = new System.Drawing.Size(120, 20);
+            this.errorsNumUpDown.TabIndex = 10;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(260, 49);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(79, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Sequence type";
+            // 
+            // rnaCheckBox
+            // 
+            this.rnaCheckBox.AutoSize = true;
+            this.rnaCheckBox.Location = new System.Drawing.Point(31, 48);
+            this.rnaCheckBox.Name = "rnaCheckBox";
+            this.rnaCheckBox.Size = new System.Drawing.Size(41, 17);
+            this.rnaCheckBox.TabIndex = 12;
+            this.rnaCheckBox.Text = "rna";
+            this.rnaCheckBox.UseVisualStyleBackColor = true;
+            this.rnaCheckBox.CheckedChanged += new System.EventHandler(this.rnaCheckBox_CheckedChanged);
+            // 
+            // dnaCheckBox
+            // 
+            this.dnaCheckBox.AutoSize = true;
+            this.dnaCheckBox.Checked = true;
+            this.dnaCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dnaCheckBox.Location = new System.Drawing.Point(160, 48);
+            this.dnaCheckBox.Name = "dnaCheckBox";
+            this.dnaCheckBox.Size = new System.Drawing.Size(44, 17);
+            this.dnaCheckBox.TabIndex = 13;
+            this.dnaCheckBox.Text = "dna";
+            this.dnaCheckBox.UseVisualStyleBackColor = true;
+            this.dnaCheckBox.CheckedChanged += new System.EventHandler(this.dnaCheckBox_CheckedChanged);
+            // 
+            // randomSequenceRadioButton
+            // 
+            this.randomSequenceRadioButton.AutoSize = true;
+            this.randomSequenceRadioButton.Checked = true;
+            this.randomSequenceRadioButton.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.randomSequenceRadioButton.Location = new System.Drawing.Point(31, 12);
+            this.randomSequenceRadioButton.Name = "randomSequenceRadioButton";
+            this.randomSequenceRadioButton.Size = new System.Drawing.Size(110, 17);
+            this.randomSequenceRadioButton.TabIndex = 14;
+            this.randomSequenceRadioButton.Text = "randomSequence";
+            this.randomSequenceRadioButton.UseVisualStyleBackColor = true;
+            this.randomSequenceRadioButton.CheckedChanged += new System.EventHandler(this.randomSequenceRadioButton_CheckedChanged);
+            // 
+            // referenceSequenceRadioButton
+            // 
+            this.referenceSequenceRadioButton.AutoSize = true;
+            this.referenceSequenceRadioButton.Location = new System.Drawing.Point(160, 12);
+            this.referenceSequenceRadioButton.Name = "referenceSequenceRadioButton";
+            this.referenceSequenceRadioButton.Size = new System.Drawing.Size(123, 17);
+            this.referenceSequenceRadioButton.TabIndex = 15;
+            this.referenceSequenceRadioButton.Text = "reference Sequence";
+            this.referenceSequenceRadioButton.UseVisualStyleBackColor = true;
+            this.referenceSequenceRadioButton.CheckedChanged += new System.EventHandler(this.referenceSequenceRadioButton_CheckedChanged);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(370, 276);
+            this.Controls.Add(this.referenceSequenceRadioButton);
+            this.Controls.Add(this.randomSequenceRadioButton);
+            this.Controls.Add(this.dnaCheckBox);
+            this.Controls.Add(this.rnaCheckBox);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.errorsNumUpDown);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.numberOfSequencesNumericUpDown);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.form2_ok);
-            this.Controls.Add(this.randomSequenceRadioButton);
-            this.Controls.Add(this.referenceSequenceRadioButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.refSeqTextBox);
             this.Controls.Add(this.seqLenNumericUpDown);
             this.Controls.Add(this.label1);
             this.Name = "Form2";
             this.Text = "Form2";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.seqLenNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfSequencesNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorsNumUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -178,10 +245,15 @@
         private System.Windows.Forms.NumericUpDown seqLenNumericUpDown;
         private System.Windows.Forms.TextBox refSeqTextBox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.RadioButton referenceSequenceRadioButton;
-        private System.Windows.Forms.RadioButton randomSequenceRadioButton;
         private System.Windows.Forms.Button form2_ok;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown numberOfSequencesNumericUpDown;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown errorsNumUpDown;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox rnaCheckBox;
+        private System.Windows.Forms.CheckBox dnaCheckBox;
+        private System.Windows.Forms.CheckBox randomSequenceRadioButton;
+        private System.Windows.Forms.CheckBox referenceSequenceRadioButton;
     }
 }

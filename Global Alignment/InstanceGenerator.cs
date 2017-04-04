@@ -8,10 +8,11 @@ namespace Global_Alignment
 {
     class InstanceGenerator
     {
-        public static List<string> createInstance(string _randomSequence, uint _numberOfSequences) {
+        public static List<string> createInstance(string _randomSequence, uint _numberOfSequences, uint _numOfErrors = 0, string _type = "dna") {
             List<string> sequences = new List<string>();
             Random rnd = new Random();
             string sequence = "";
+
             List<bool> currentRandomBoolVector = new List<bool>();
             for (int i = 0; i < _numberOfSequences; i++) {
                 sequence = "";
@@ -23,7 +24,52 @@ namespace Global_Alignment
                 }
                 sequences.Add(sequence);
             }
+
+            List<int> randomNumSeq = new List<int>();
+            List<int> randomNumNuc = new List<int>();
+            StringBuilder sb;
+            int randomNumberSeq;
+            int randomNumberNuc;
+            for (int i = 0; i < _numOfErrors; i++) {
+                randomNumberSeq = rnd.Next(sequences.Count);
+                randomNumberNuc = rnd.Next(sequences[0].Length);
+                while (randomNumSeq.Contains(randomNumberSeq) && randomNumNuc.Contains(randomNumberNuc)) {
+                    randomNumberSeq = rnd.Next(sequences.Count);
+                    randomNumberNuc = rnd.Next(sequences[0].Length);
+                }
+                randomNumSeq.Add(randomNumberSeq);
+                randomNumNuc.Add(randomNumberNuc);
+                sb = new StringBuilder(sequences[randomNumberSeq]);
+                sb[randomNumberNuc] = substitute(sb[randomNumberNuc], _type);
+                sequences[randomNumberSeq] = sb.ToString();
+                //TODO wstawianie zadanej liczby bledow do sekwencji. Tylko substytucje (by była możliwość rzetelnej oceny jakości rozwiązania)
+            }
             return sequences;
+        }
+
+        public static char substitute(char _charToChange, string _type = "dna") {
+            char newChar;
+            List<char> dnaIupuacNucs = new List<char> { 'A', 'T', 'G', 'C' };
+            List<char> rnaIupuacNucs = new List<char> { 'A', 'U', 'G', 'C' };
+            Random rnd = new Random();
+            if (_type == "dna")
+            {   
+                newChar = dnaIupuacNucs[rnd.Next(dnaIupuacNucs.Count)];
+            }
+            else {
+                newChar = rnaIupuacNucs[rnd.Next(rnaIupuacNucs.Count)];
+            }
+            while (newChar == _charToChange) {
+                if (_type == "dna")
+                {
+                    newChar = dnaIupuacNucs[rnd.Next(dnaIupuacNucs.Count)];
+                }
+                else
+                {
+                    newChar = rnaIupuacNucs[rnd.Next(rnaIupuacNucs.Count)];
+                }
+            }
+            return newChar;
         }
     }
 }
