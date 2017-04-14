@@ -33,6 +33,7 @@
             this.randomButton = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.saveToFASTAButton = new System.Windows.Forms.Button();
+            this.runButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -77,7 +78,7 @@
             this.dataGridView.Location = new System.Drawing.Point(12, 41);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.dataGridView.Size = new System.Drawing.Size(672, 251);
+            this.dataGridView.Size = new System.Drawing.Size(672, 247);
             this.dataGridView.TabIndex = 4;
             this.dataGridView.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView_RowValidating);
             // 
@@ -91,11 +92,21 @@
             this.saveToFASTAButton.UseVisualStyleBackColor = true;
             this.saveToFASTAButton.Click += new System.EventHandler(this.saveToFASTAButton_Click);
             // 
+            // runButton
+            // 
+            this.runButton.Location = new System.Drawing.Point(198, 360);
+            this.runButton.Name = "runButton";
+            this.runButton.Size = new System.Drawing.Size(251, 23);
+            this.runButton.TabIndex = 6;
+            this.runButton.Text = "Run";
+            this.runButton.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 353);
+            this.ClientSize = new System.Drawing.Size(699, 425);
+            this.Controls.Add(this.runButton);
             this.Controls.Add(this.saveToFASTAButton);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.randomButton);
@@ -116,6 +127,7 @@
         private System.Windows.Forms.Button randomButton;
         public System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button saveToFASTAButton;
+        private System.Windows.Forms.Button runButton;
     }
 }
 
