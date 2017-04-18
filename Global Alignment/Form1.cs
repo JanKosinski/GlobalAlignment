@@ -145,5 +145,19 @@ namespace Global_Alignment
         {
             validateDataTable();
         }
+
+        private void runButton_Click(object sender, EventArgs e)
+        {   
+            // TODO when datagridview is empty -> validation
+            
+            List<string>sequencesToAlign = new List<string>();
+            foreach (DataRow row in this.dt.Rows)
+            {
+                sequencesToAlign.Add(row["Sequence"].ToString());
+            }
+            GeneticAlgorithm genAlg = new GeneticAlgorithm(100, sequencesToAlign);
+            genAlg.runAlgorithm();
+
+        }
     }
 }

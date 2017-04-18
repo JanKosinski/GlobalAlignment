@@ -100,6 +100,7 @@
             this.runButton.TabIndex = 6;
             this.runButton.Text = "Run";
             this.runButton.UseVisualStyleBackColor = true;
+            this.runButton.Click += new System.EventHandler(this.runButton_Click);
             // 
             // Form1
             // 
