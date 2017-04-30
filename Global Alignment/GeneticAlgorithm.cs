@@ -21,32 +21,47 @@ namespace Global_Alignment
         }
 
 
-        public GeneticAlgorithm(int _populationSize, List<string> _sequencesToAlign) {
+        public GeneticAlgorithm(int _populationSize, List<string> _sequencesToAlign, int _probabilityOfMutations) {
             this.populationSize = _populationSize;
             this.sequencesToAlign = _sequencesToAlign;
             this.numberOfSequencesToAlign = _sequencesToAlign.Count;
             // TODO try catch this
             this.sequenceLength = _sequencesToAlign[0].Length;
             //
-            
+            this.probabilityOfMutations = _probabilityOfMutations;
+            this.bestFitness = 0;
         }
 
         //params
         private int populationSize;
         private int numberOfSequencesToAlign;  //from data grid view
         private int sequenceLength;     // sequence length from data grid view
+        private int probabilityOfMutations;
 
         //params
         public List<Individual> population;
 
+        public Individual BestAlignment { get; set; }
+
+        private int bestFitness;
+
         public List<string> sequencesToAlign;
 
         public void runAlgorithm() {
-            int iterations = 10;
+            Random rnd = new Random();
+            int mut;
+            int iterations = 100000;
             this.createRandomPopulation();
             for (int it = 0; it < iterations; it++) {
                 this.convertBoolToAlignment();
                 this.fitnessFunction();
+                this.selection();
+                this.crossover();
+                mut = rnd.Next(0, 101);
+                if (mut <= probabilityOfMutations) {
+                    mut = rnd.Next(0, populationSize);
+                    population[mut] = mutation(population[mut]);
+                }
                 
             }
         }
@@ -60,7 +75,6 @@ namespace Global_Alignment
                     indiv.matrix.Add(SharedMethods.createRandomBooleanVector(sequenceLength*2, Convert.ToUInt32(sequenceLength), rnd));
                 }
                 population.Add(indiv);
-                //TODO testy
             }
         }
 
@@ -86,13 +100,13 @@ namespace Global_Alignment
                     alignment.Add(currentRow);
                 }
                 population[individual].alignment = alignment;
-                //TODO testy
             }
         }
 
         public void fitnessFunction() {
             List<char> nucleotidesInColumn = new List<char>();
             int misMatches = 0;
+            double floatFit;
             for (int individual = 0; individual < population.Count; individual++) {
                 misMatches = 0;
                 for (int column = 0; column < this.sequenceLength * 2; column++) {
@@ -105,7 +119,17 @@ namespace Global_Alignment
                         misMatches++;
                     }
                 }
-                population[individual].fitness = (1 - (misMatches / (sequenceLength*2) )) * 100;
+                floatFit = (1.0 - (Convert.ToDouble(misMatches) / (Convert.ToDouble(sequenceLength) * 2.0))) * 100.0;
+                population[individual].fitness = Convert.ToInt32(floatFit);
+                if (population[individual].fitness == 0)
+                {
+                    population[individual].fitness = 1;
+                }
+                if (population[individual].fitness > bestFitness) {
+                    this.bestFitness = population[individual].fitness;
+                    Console.WriteLine(bestFitness.ToString());
+                    this.BestAlignment = population[individual]; 
+                }
             }
         }
 
@@ -174,14 +198,21 @@ namespace Global_Alignment
                 for (int i = from; i <= to; i++) {
                     seqToTranslocate.Add(_individual.matrix[row][i]);   //tworzymy liste zawierajaca sekwencje do przestawienia
                 }
-                _individual.matrix[row].RemoveRange(from, to - from);   // usuwamy ja z pierwotnego dopasowania
+                _individual.matrix[row].RemoveRange(from, to - from + 1);   // usuwamy ja z pierwotnego dopasowania
                 int where = rnd.Next(0, sequenceLength * 2);    //losujemy index gdzie ja wstawimy
                 for (int j = where; j < where + seqToTranslocate.Count; j++) {
-                    _individual.matrix[row].Insert(j, seqToTranslocate[j-where]);   //wstawiamy
+                    if (_individual.matrix[row].Count <= j)
+                    {
+                        _individual.matrix[row].Add(seqToTranslocate[j - where]);
+                    }
+                    else
+                    {
+                        _individual.matrix[row].Insert(j, seqToTranslocate[j - where]);   //wstawiamy
+                    }
                 }
-                if (_individual.matrix[row].Count != sequenceLength * 2) {
+                if (_individual.matrix[row].Count != sequenceLength * 2 || _individual.matrix[row].Count(i=>i.Equals(true)) != sequenceLength) {
                     Console.WriteLine("Blad przy translokacji");    //sprawdzamy czy wszystko jest ok
-                }  
+                }
             }
             else {
                 Console.WriteLine("BLAD");
@@ -195,7 +226,9 @@ namespace Global_Alignment
             Individual newborn = new Individual();
             Random rnd = new Random();
             for (int row = 0; row < numberOfSequencesToAlign; row++) {
+                newborn.matrix.Add(new List<bool>());
                 for (int i = 0; i < sequenceLength * 2; i++) {
+
                     newborn.matrix[row].Add(false); // tworzenie pustej macierzy
                 }
             }
@@ -210,7 +243,7 @@ namespace Global_Alignment
                     {
                         indexesOfTruesInMother.Add(i);
                     }
-                    else if (_b.matrix[row][i] == true) {
+                    if (_b.matrix[row][i] == true) {
                         indexesOfTruesInFather.Add(i);
                     }
                 }
@@ -241,15 +274,22 @@ namespace Global_Alignment
             Individual newIndividual;
             List<Individual> newborns = new List<Individual>();
             Random rnd = new Random();
+            int probability;
             while (population.Count + newborns.Count < populationSize) {
-                //TODO dodac prawdopodobienstwo ze dojdzie do krzyzowania dwoch osobnikow
+                probability = rnd.Next(0, 2*bestFitness+1);
                 indexA = rnd.Next(0, population.Count);
                 indexB = rnd.Next(0, population.Count);
                 while (indexA == indexB) {
                     indexB = rnd.Next(0, population.Count);
                 }
-                newIndividual = recombination(population[indexA], population[indexB]);
-                newborns.Add(newIndividual);
+                if (probability <= population[indexA].fitness + population[indexB].fitness) // im lepiej dostosowane osobniki tym wieksza szansa ze sie skrzyzuja
+                {
+                    newIndividual = recombination(population[indexA], population[indexB]);
+                    newborns.Add(newIndividual);
+                }
+            }
+            for (int i = 0; i < newborns.Count; i++) {
+                population.Add(newborns[i]);
             }
 
         }

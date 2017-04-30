@@ -155,7 +155,7 @@ namespace Global_Alignment
             {
                 sequencesToAlign.Add(row["Sequence"].ToString());
             }
-            GeneticAlgorithm genAlg = new GeneticAlgorithm(100, sequencesToAlign);
+            GeneticAlgorithm genAlg = new GeneticAlgorithm(100, sequencesToAlign, 3);
             genAlg.runAlgorithm();
 
         }
