@@ -146,5 +146,112 @@ namespace Global_Alignment
             }
             population = populationCopy;
         }
+
+
+        public Individual mutation(Individual _individual) {
+            Random rnd = new Random();
+            int substOrTrans = 0;   // 0 = susbstitution, 1 = translocation
+            substOrTrans = rnd.Next(0, 2);
+            int row = rnd.Next(0, numberOfSequencesToAlign);    // number of sequence where mutation occurs
+            if (substOrTrans == 0)
+            {    // substitution
+                int a = rnd.Next(0, sequenceLength * 2);
+                int b = rnd.Next(0, sequenceLength * 2);
+                int temp;
+                while (_individual.matrix[row][a] == _individual.matrix[row][b])
+                {
+                    b = rnd.Next(0, sequenceLength * 2);
+                }
+                temp = a;
+                a = b;
+                b = temp;
+            }
+            else if (substOrTrans == 1)
+            {   //translokacja
+                List<bool> seqToTranslocate = new List<bool>();
+                int from = rnd.Next(0, (sequenceLength * 2) - 1 );  //poczatek ciagu do przestawienia
+                int to = rnd.Next(from + 1, sequenceLength * 2);    //koniec ciagu do przestawienia
+                for (int i = from; i <= to; i++) {
+                    seqToTranslocate.Add(_individual.matrix[row][i]);   //tworzymy liste zawierajaca sekwencje do przestawienia
+                }
+                _individual.matrix[row].RemoveRange(from, to - from);   // usuwamy ja z pierwotnego dopasowania
+                int where = rnd.Next(0, sequenceLength * 2);    //losujemy index gdzie ja wstawimy
+                for (int j = where; j < where + seqToTranslocate.Count; j++) {
+                    _individual.matrix[row].Insert(j, seqToTranslocate[j-where]);   //wstawiamy
+                }
+                if (_individual.matrix[row].Count != sequenceLength * 2) {
+                    Console.WriteLine("Blad przy translokacji");    //sprawdzamy czy wszystko jest ok
+                }  
+            }
+            else {
+                Console.WriteLine("BLAD");
+            }
+
+
+            return _individual;
+        }
+
+        public Individual recombination(Individual _a, Individual _b) {
+            Individual newborn = new Individual();
+            Random rnd = new Random();
+            for (int row = 0; row < numberOfSequencesToAlign; row++) {
+                for (int i = 0; i < sequenceLength * 2; i++) {
+                    newborn.matrix[row].Add(false); // tworzenie pustej macierzy
+                }
+            }
+            int randomIndex;
+            List<int> indexesOfTruesInMother = new List<int>();   // lista zawierajaca indeksy na ktorych wystepuja 1 u matki
+            List<int> indexesOfTruesInFather = new List<int>();     // to samo u ojca
+            for (int row = 0; row < numberOfSequencesToAlign; row++) {
+                indexesOfTruesInMother.Clear();
+                indexesOfTruesInFather.Clear();
+                for (int i = 0; i < sequenceLength * 2; i++) {  // tworzymy wektory opisujace na ktorych indeksach mamy 1 w wektorach rodzicow
+                    if (_a.matrix[row][i] == true)
+                    {
+                        indexesOfTruesInMother.Add(i);
+                    }
+                    else if (_b.matrix[row][i] == true) {
+                        indexesOfTruesInFather.Add(i);
+                    }
+                }
+                while (newborn.matrix[row].Count(i=>i.Equals(true))<sequenceLength) {   // tak dlugo az nie ma wystarczajacej ilosci 1 w wektorze wynikowym
+                    randomIndex = rnd.Next(0, indexesOfTruesInMother.Count);            // losujemy index z tablicy indexow; na taki indeks bedziemy chcieli wstawic 1 (od matki)
+                    while (newborn.matrix[row][indexesOfTruesInMother[randomIndex]] == true) {  // ale jezeli na tym miejscu juz jest 1 to chcemy znalezc inne miejsce
+                        randomIndex = rnd.Next(0, indexesOfTruesInMother.Count);
+                    }
+                    newborn.matrix[row][indexesOfTruesInMother[randomIndex]] = true;    // wstawiamy 1
+                    if (newborn.matrix[row].Count(i => i.Equals(true)) == sequenceLength) { // jezeli liczba 1 jest odpowiednia to przerywamy. Jezeli nie to kontynuujemy z ojcem
+                        break;
+                    }
+                    randomIndex = rnd.Next(0, indexesOfTruesInFather.Count);
+                    while (newborn.matrix[row][indexesOfTruesInFather[randomIndex]] == true)
+                    {
+                        randomIndex = rnd.Next(0, indexesOfTruesInFather.Count);
+                    }
+                    newborn.matrix[row][indexesOfTruesInFather[randomIndex]] = true;
+                }
+            }
+
+            return newborn;
+        }
+
+        public void crossover() {
+            int indexA;
+            int indexB;
+            Individual newIndividual;
+            List<Individual> newborns = new List<Individual>();
+            Random rnd = new Random();
+            while (population.Count + newborns.Count < populationSize) {
+                //TODO dodac prawdopodobienstwo ze dojdzie do krzyzowania dwoch osobnikow
+                indexA = rnd.Next(0, population.Count);
+                indexB = rnd.Next(0, population.Count);
+                while (indexA == indexB) {
+                    indexB = rnd.Next(0, population.Count);
+                }
+                newIndividual = recombination(population[indexA], population[indexB]);
+                newborns.Add(newIndividual);
+            }
+
+        }
     }
 }
