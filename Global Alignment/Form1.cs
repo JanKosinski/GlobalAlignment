@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -29,6 +30,8 @@ namespace Global_Alignment
         {
 
         }
+
+        //volatile bool Active = true;
 
         private void randomButton_Click(object sender, EventArgs e)
         {
@@ -156,8 +159,37 @@ namespace Global_Alignment
                 sequencesToAlign.Add(row["Sequence"].ToString());
             }
             GeneticAlgorithm genAlg = new GeneticAlgorithm(100, sequencesToAlign, 3);
-            genAlg.runAlgorithm();
+            
+            BackgroundWorker bw = new BackgroundWorker();
+            // this allows our worker to report progress during work
+            bw.WorkerReportsProgress = true;
+            // what to do in the background thread
+            bw.DoWork += new DoWorkEventHandler(
+            delegate (object o, DoWorkEventArgs args)
+            {
+                BackgroundWorker b = o as BackgroundWorker;
+                genAlg.runAlgorithm();
+            });
+            // what to do when progress changed (update the progress bar for example)
+            bw.ProgressChanged += new ProgressChangedEventHandler(
+            delegate (object o, ProgressChangedEventArgs args)
+            {
+                //label1.Text = string.Format("{0}% Completed", args.ProgressPercentage);
+                //textBox1.AppendText(string.Format("{0}% Completed", args.ProgressPercentage) + Environment.NewLine);
+                //if (args.UserState != null)
+                //textBox1.AppendText(args.UserState + Environment.NewLine);
+            });
 
+            // what to do when worker completes its task (notify the user)
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+            delegate (object o, RunWorkerCompletedEventArgs args)
+            {
+                //label1.Text = "Finished!";
+                //textBox1.AppendText("Finished!" + Environment.NewLine);
+            });
+
+            bw.RunWorkerAsync();
         }
+
     }
 }
