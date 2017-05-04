@@ -183,12 +183,26 @@ namespace Global_Alignment
                     }
                 }
             }
+
+            Console.WriteLine("TO REMOVE: ");
             for (int j = 0; j < population.Count; j++) {
-                if (!toRemove.Contains(j)) {
+                if (!toRemove.Contains(j))
+                {
                     populationCopy.Add(population[j]);
                 }
+                else {
+                    Console.Write(population[j].Fitness.ToString() + "\t"); //test
+                }
             }
+
+            //test
+            Console.WriteLine("LEFT: ");
             population = populationCopy;
+            for (int i = 0; i < population.Count; i++) {
+                Console.Write(population[i].Fitness.ToString() + "\t");
+            }
+            //test
+            Console.WriteLine(Environment.NewLine);
         }
 
 
@@ -242,7 +256,7 @@ namespace Global_Alignment
             return _individual;
         }
 
-        public Individual recombination(Individual _a, Individual _b) {
+        /*public Individual recombination(Individual _a, Individual _b) {
             Individual newborn = new Individual();
             Random rnd = new Random();
             for (int row = 0; row < NumberOfSequencesToAlign; row++) {
@@ -286,15 +300,101 @@ namespace Global_Alignment
             }
 
             return newborn;
+        }*/
+
+        public Individual[] recombination(Individual _a, Individual _b) {
+            //CPC crossover operator used
+            Individual[] offspring = new Individual[2];
+            List<bool> L_up;
+            List<bool> L_down;
+            Individual offspring1 = new Individual();
+            Individual offspring2 = new Individual();
+            List<bool> newRow1;
+            List<bool> newRow2;
+            for (int row = 0; row < NumberOfSequencesToAlign; row++) {
+                
+                // creates Lup and Ldown lists
+                L_up = new List<bool>();
+                L_down = new List<bool>();
+                for (int i = 0; i < SequenceLength * 2; i++) {
+                    //lup
+                    if (_a.matrix[row][i] == true && _b.matrix[row][i] == false)
+                    {
+                        L_up.Add(true);
+                    }
+                    else {
+                        L_up.Add(false);
+                    }//
+                    //ldown
+                    if (_a.matrix[row][i] == false && _b.matrix[row][i] == true)
+                    {
+                        L_down.Add(true);
+                    }
+                    else
+                    {
+                        L_down.Add(false);
+                    }//  
+                }
+                //
+                newRow1 = new List<bool>();
+                newRow2 = new List<bool>();
+                for (int j = 0; j < SequenceLength * 2; j++) {
+                    if (L_up[j] == true || L_down[j] == true)
+                    {
+                        if (_a.matrix[row][j] == false)
+                        {
+                            newRow1.Add(true);
+                        }
+                        else {
+                            newRow1.Add(false);
+                        }
+
+                        if (_b.matrix[row][j] == false)
+                        {
+                            newRow2.Add(true);
+                        }
+                        else
+                        {
+                            newRow2.Add(false);
+                        }
+                    }
+                    else {
+                        newRow1.Add(_a.matrix[row][j]);
+                        newRow2.Add(_b.matrix[row][j]);
+                        
+                    }
+                }
+                //testy
+                if (newRow1.Count(i => i.Equals(true)) != SequenceLength || newRow2.Count(i => i.Equals(true)) != SequenceLength)
+                {
+                    Console.WriteLine("Blad w krzyzowaniu" + Environment.NewLine);
+                }
+                if (newRow1.Count != SequenceLength*2 || newRow2.Count != SequenceLength*2)
+                {
+                    Console.WriteLine("Blad w krzyzowaniu 3");
+                }
+                //koniec testow
+                offspring1.matrix.Add(newRow1);
+                offspring2.matrix.Add(newRow2);
+
+            }
+            //testy
+            if (offspring1.matrix.Count != NumberOfSequencesToAlign || offspring2.matrix.Count != NumberOfSequencesToAlign) {
+                Console.WriteLine("Blad w krzyzowaniu 2");
+            }
+            //testy
+            offspring[0] = offspring1;
+            offspring[1] = offspring2;
+            return offspring;
         }
 
         public void crossover() {
             int indexA;
             int indexB;
-            Individual newIndividual;
             List<Individual> newborns = new List<Individual>();
             Random rnd = new Random();
             int probability;
+            Individual[] offspring;
             while (population.Count + newborns.Count < PopulationSize) {
                 probability = rnd.Next(0, 2*BestFitness+1);
                 indexA = rnd.Next(0, population.Count);
@@ -302,14 +402,19 @@ namespace Global_Alignment
                 while (indexA == indexB) {
                     indexB = rnd.Next(0, population.Count);
                 }
-                if (probability <= population[indexA].Fitness + population[indexB].Fitness) // im lepiej dostosowane osobniki tym wieksza szansa ze sie skrzyzuja
-                {
-                    newIndividual = recombination(population[indexA], population[indexB]);
-                    newborns.Add(newIndividual);
-                }
+                //Console.WriteLine("Skrzyzowano: "+ indexA.ToString() + " " + indexB.ToString() + Environment.NewLine);
+                //if (probability <= population[indexA].Fitness + population[indexB].Fitness) // im lepiej dostosowane osobniki tym wieksza szansa ze sie skrzyzuja
+                //{ //TODO odkomentowac jak zacznie wszystko dzialac
+                    offspring = recombination(population[indexA], population[indexB]);
+                    newborns.Add(offspring[0]);
+                    newborns.Add(offspring[1]);
+                //}
             }
             for (int i = 0; i < newborns.Count; i++) {
-                population.Add(newborns[i]);
+                if (population.Count < PopulationSize)
+                {
+                    population.Add(newborns[i]);
+                }
             }
 
         }
