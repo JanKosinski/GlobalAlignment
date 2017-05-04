@@ -31,7 +31,10 @@ namespace Global_Alignment
 
         }
 
-        //volatile bool Active = true;
+        volatile bool Active = true;
+        volatile bool Abort = false;
+
+        public string BestAlignmentUpToDate { get; set; }
 
         private void randomButton_Click(object sender, EventArgs e)
         {
@@ -78,16 +81,21 @@ namespace Global_Alignment
                 for (int j = 0; j< names.Count; j++){
                     this.dt.Rows.Add(new object[] { Regex.Replace(names[j], @"\s+", ""), Regex.Replace(sequences[j], @"\s+", "") });    // adding rows to data table
                 }
-
-
-            }
-            
+            }     
         }
 
 
 
         private bool validateDataTable() {  // sprawdza czy arkusz nie zawiera błedów. Jeżeli zawiera to zakreśl wiersz na czerwono
-            int seqLen = this.dataGridView.Rows[0].Cells[1].Value.ToString().Length;
+            int seqLen;
+            try
+            {
+                seqLen = this.dataGridView.Rows[0].Cells[1].Value.ToString().Length;
+            }
+            catch (NullReferenceException e) {
+                Console.WriteLine(e);
+                return false;
+            }
             Regex sequenceRegex;
             Match sequenceMatch;
             bool temp = false;
@@ -150,46 +158,148 @@ namespace Global_Alignment
         }
 
         private void runButton_Click(object sender, EventArgs e)
-        {   
-            // TODO when datagridview is empty -> validation
-            
-            List<string>sequencesToAlign = new List<string>();
-            foreach (DataRow row in this.dt.Rows)
+        {
+            Abort = false;
+            runButton.Enabled = false;
+            progressBar1.Visible = true;
+            progressLabel.Visible = true;
+            pauseResumeButton.Visible = true;
+            string outRes = "";
+            this.outputBox.Clear();
+            if (validateDataTable() && this.dt.Rows.Count >= 2)
             {
-                sequencesToAlign.Add(row["Sequence"].ToString());
+                this.progressBar1.Maximum = Convert.ToInt32(this.iterationsUpDown.Value);
+                this.progressBar1.Minimum = 0;
+
+                List<string> sequencesToAlign = new List<string>();
+                foreach (DataRow row in this.dt.Rows)
+                {
+                    sequencesToAlign.Add(row["Sequence"].ToString());
+                }
+                GeneticAlgorithm genAlg = new GeneticAlgorithm(100, sequencesToAlign, 3);
+
+                BackgroundWorker bw = new BackgroundWorker();
+                // this allows our worker to report progress during work
+                bw.WorkerReportsProgress = true;
+                // what to do in the background thread
+                bw.DoWork += new DoWorkEventHandler(
+                delegate (object o, DoWorkEventArgs args)
+                {
+                    int prvBestAligment = 0;
+                    BackgroundWorker b = o as BackgroundWorker;
+                    Random rnd = new Random();
+                    int mut;
+                    int iterations = Convert.ToInt32(iterationsUpDown.Value);
+                    genAlg.createRandomPopulation();
+                    for (int it = 0; it < iterations; it++)
+                    {
+                        if (Active)
+                        {   
+                            //genetic algorithm
+                            genAlg.convertBoolToAlignment();
+                            
+                            //
+                            if (it >= 1)
+                            {
+                                prvBestAligment = genAlg.BestAlignment.Fitness; //report progress
+                            }
+                            //
+
+                            genAlg.fitnessFunction();
+                            
+                            //
+                            BestAlignmentUpToDate = "";
+                            for (int i = 0; i < genAlg.BestAlignment.alignment.Count; i++)
+                            {
+                                BestAlignmentUpToDate += string.Join(" ", genAlg.BestAlignment.alignment[i].ToArray()); // report progress
+                                BestAlignmentUpToDate += Environment.NewLine;
+                            }
+                            //
+                            genAlg.selection();
+                            genAlg.crossover();
+                            mut = rnd.Next(0, 101);
+                            if (mut <= genAlg.ProbabilityOfMutations)
+                            {
+                                mut = rnd.Next(0, genAlg.PopulationSize);
+                                genAlg.population[mut] = genAlg.mutation(genAlg.population[mut]);
+                            }
+
+
+                            // report progress
+                            if (it >= 1 && genAlg.BestAlignment.Fitness > prvBestAligment)
+                            {
+                                b.ReportProgress(it, ("Best Fitness Up to Date: " + genAlg.BestAlignment.Fitness.ToString()));
+                            }
+                            else if (it == 0)
+                            {
+                                b.ReportProgress(it, ("Best Fitness Up to Date: " + genAlg.BestAlignment.Fitness.ToString()));
+                            }
+                            else
+                            {
+                                b.ReportProgress(it);
+                            }
+                        }
+                        else {
+                            Thread.Sleep(100);
+                        }
+                        
+
+                    }
+                    string output = "";
+                    for (int i = 0; i < genAlg.BestAlignment.alignment.Count; i++) {
+                        output += string.Join(" ", genAlg.BestAlignment.alignment[i].ToArray());
+                        output += Environment.NewLine;
+                    }
+                    outRes = output;
+
+                });
+                // what to do when progress changed (update the progress bar for example)
+                bw.ProgressChanged += new ProgressChangedEventHandler(
+                delegate (object o, ProgressChangedEventArgs args)
+                {
+                    this.progressBar1.Value = args.ProgressPercentage;
+                    if (args.UserState != null) {
+                        this.outputBox.Text += args.UserState + Environment.NewLine;
+                    }
+
+                });
+
+                // what to do when worker completes its task (notify the user)
+                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+                delegate (object o, RunWorkerCompletedEventArgs args)
+                {
+                    this.outputBox.Text += "DONE!"+Environment.NewLine+outRes;
+                    progressBar1.Visible = false;
+                    progressLabel.Visible = false;
+                    this.runButton.Enabled = true;
+                    this.pauseResumeButton.Visible = false;
+                });
+
+                bw.RunWorkerAsync();
+
             }
-            GeneticAlgorithm genAlg = new GeneticAlgorithm(100, sequencesToAlign, 3);
-            
-            BackgroundWorker bw = new BackgroundWorker();
-            // this allows our worker to report progress during work
-            bw.WorkerReportsProgress = true;
-            // what to do in the background thread
-            bw.DoWork += new DoWorkEventHandler(
-            delegate (object o, DoWorkEventArgs args)
-            {
-                BackgroundWorker b = o as BackgroundWorker;
-                genAlg.runAlgorithm();
-            });
-            // what to do when progress changed (update the progress bar for example)
-            bw.ProgressChanged += new ProgressChangedEventHandler(
-            delegate (object o, ProgressChangedEventArgs args)
-            {
-                //label1.Text = string.Format("{0}% Completed", args.ProgressPercentage);
-                //textBox1.AppendText(string.Format("{0}% Completed", args.ProgressPercentage) + Environment.NewLine);
-                //if (args.UserState != null)
-                //textBox1.AppendText(args.UserState + Environment.NewLine);
-            });
-
-            // what to do when worker completes its task (notify the user)
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
-            delegate (object o, RunWorkerCompletedEventArgs args)
-            {
-                //label1.Text = "Finished!";
-                //textBox1.AppendText("Finished!" + Environment.NewLine);
-            });
-
-            bw.RunWorkerAsync();
+            else {
+                MessageBox.Show("Data not valid");
+            }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (pauseResumeButton.Text == "Pause")
+            {
+                Active = false;
+                pauseResumeButton.Text = "Resume";
+                this.outputBox.Text = "Best Alignment Up to Date:" + Environment.NewLine + BestAlignmentUpToDate + Environment.NewLine;
+            }
+            else {
+                Active = true;
+                pauseResumeButton.Text = "Pause";
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Abort = true;
+        }
     }
 }

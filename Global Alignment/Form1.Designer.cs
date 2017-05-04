@@ -34,7 +34,7 @@
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.saveToFASTAButton = new System.Windows.Forms.Button();
             this.runButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.outputBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.probabilityOfMutationsUpDown = new System.Windows.Forms.NumericUpDown();
@@ -46,8 +46,9 @@
             this.stopAfterUpDown = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.progressLabel = new System.Windows.Forms.Label();
+            this.pauseResumeButton = new System.Windows.Forms.Button();
+            this.abortButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.probabilityOfMutationsUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.populationSizeUpDown)).BeginInit();
@@ -58,7 +59,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(12, 25);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(31, 13);
             this.label1.TabIndex = 1;
@@ -120,15 +121,17 @@
             this.runButton.UseVisualStyleBackColor = true;
             this.runButton.Click += new System.EventHandler(this.runButton_Click);
             // 
-            // textBox1
+            // outputBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(15, 463);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(669, 101);
-            this.textBox1.TabIndex = 7;
+            this.outputBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.outputBox.Location = new System.Drawing.Point(15, 463);
+            this.outputBox.Multiline = true;
+            this.outputBox.Name = "outputBox";
+            this.outputBox.ReadOnly = true;
+            this.outputBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.outputBox.Size = new System.Drawing.Size(1179, 101);
+            this.outputBox.TabIndex = 7;
+            this.outputBox.WordWrap = false;
             // 
             // label2
             // 
@@ -274,36 +277,54 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(530, 325);
+            this.progressBar1.Location = new System.Drawing.Point(486, 356);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(280, 23);
+            this.progressBar1.Step = 1;
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar1.TabIndex = 20;
+            this.progressBar1.Visible = false;
             // 
-            // label8
+            // progressLabel
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(0, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(35, 13);
-            this.label8.TabIndex = 21;
-            this.label8.Text = "label8";
+            this.progressLabel.AutoSize = true;
+            this.progressLabel.Location = new System.Drawing.Point(772, 361);
+            this.progressLabel.Name = "progressLabel";
+            this.progressLabel.Size = new System.Drawing.Size(48, 13);
+            this.progressLabel.TabIndex = 22;
+            this.progressLabel.Text = "Progress";
+            this.progressLabel.Visible = false;
             // 
-            // label9
+            // pauseResumeButton
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(826, 329);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(48, 13);
-            this.label9.TabIndex = 22;
-            this.label9.Text = "Progress";
+            this.pauseResumeButton.Location = new System.Drawing.Point(353, 386);
+            this.pauseResumeButton.Name = "pauseResumeButton";
+            this.pauseResumeButton.Size = new System.Drawing.Size(107, 23);
+            this.pauseResumeButton.TabIndex = 23;
+            this.pauseResumeButton.Text = "Pause";
+            this.pauseResumeButton.UseVisualStyleBackColor = true;
+            this.pauseResumeButton.Visible = false;
+            this.pauseResumeButton.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // abortButton
+            // 
+            this.abortButton.Location = new System.Drawing.Point(353, 415);
+            this.abortButton.Name = "abortButton";
+            this.abortButton.Size = new System.Drawing.Size(107, 23);
+            this.abortButton.TabIndex = 24;
+            this.abortButton.Text = "Abort";
+            this.abortButton.UseVisualStyleBackColor = true;
+            this.abortButton.Visible = false;
+            this.abortButton.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1209, 576);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
+            this.Controls.Add(this.abortButton);
+            this.Controls.Add(this.pauseResumeButton);
+            this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.stopAfterUpDown);
@@ -315,7 +336,7 @@
             this.Controls.Add(this.probabilityOfMutationsUpDown);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.outputBox);
             this.Controls.Add(this.runButton);
             this.Controls.Add(this.saveToFASTAButton);
             this.Controls.Add(this.dataGridView);
@@ -323,7 +344,7 @@
             this.Controls.Add(this.loadButton);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Multiple Sequence Alignment";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.probabilityOfMutationsUpDown)).EndInit();
@@ -342,7 +363,7 @@
         public System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button saveToFASTAButton;
         private System.Windows.Forms.Button runButton;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox outputBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown probabilityOfMutationsUpDown;
@@ -354,8 +375,9 @@
         private System.Windows.Forms.NumericUpDown stopAfterUpDown;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label progressLabel;
+        private System.Windows.Forms.Button pauseResumeButton;
+        private System.Windows.Forms.Button abortButton;
     }
 }
 
