@@ -49,6 +49,8 @@
             this.progressLabel = new System.Windows.Forms.Label();
             this.pauseResumeButton = new System.Windows.Forms.Button();
             this.abortButton = new System.Windows.Forms.Button();
+            this.benefitProgressBar = new System.Windows.Forms.ProgressBar();
+            this.iterationsWithoutBenefits = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.probabilityOfMutationsUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.populationSizeUpDown)).BeginInit();
@@ -317,11 +319,31 @@
             this.abortButton.Visible = false;
             this.abortButton.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // benefitProgressBar
+            // 
+            this.benefitProgressBar.Location = new System.Drawing.Point(486, 385);
+            this.benefitProgressBar.Name = "benefitProgressBar";
+            this.benefitProgressBar.Size = new System.Drawing.Size(280, 23);
+            this.benefitProgressBar.TabIndex = 25;
+            this.benefitProgressBar.Visible = false;
+            // 
+            // iterationsWithoutBenefits
+            // 
+            this.iterationsWithoutBenefits.AutoSize = true;
+            this.iterationsWithoutBenefits.Location = new System.Drawing.Point(776, 391);
+            this.iterationsWithoutBenefits.Name = "iterationsWithoutBenefits";
+            this.iterationsWithoutBenefits.Size = new System.Drawing.Size(131, 13);
+            this.iterationsWithoutBenefits.TabIndex = 26;
+            this.iterationsWithoutBenefits.Text = "Iterations Without Benefits";
+            this.iterationsWithoutBenefits.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1209, 576);
+            this.Controls.Add(this.iterationsWithoutBenefits);
+            this.Controls.Add(this.benefitProgressBar);
             this.Controls.Add(this.abortButton);
             this.Controls.Add(this.pauseResumeButton);
             this.Controls.Add(this.progressLabel);
@@ -378,6 +400,8 @@
         private System.Windows.Forms.Label progressLabel;
         private System.Windows.Forms.Button pauseResumeButton;
         private System.Windows.Forms.Button abortButton;
+        private System.Windows.Forms.ProgressBar benefitProgressBar;
+        private System.Windows.Forms.Label iterationsWithoutBenefits;
     }
 }
 

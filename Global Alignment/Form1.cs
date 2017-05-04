@@ -34,7 +34,8 @@ namespace Global_Alignment
         volatile bool Active = true;
         volatile bool Abort = false;
 
-        public string BestAlignmentUpToDate { get; set; }
+        volatile string BestAlignmentUpToDate = "";
+        volatile int BestFitnessUpToDate = 0;
 
         private void randomButton_Click(object sender, EventArgs e)
         {
@@ -157,19 +158,47 @@ namespace Global_Alignment
             validateDataTable();
         }
 
+        public class ReportProgress {
+            public GeneticAlgorithm GenAlg { get; set; }
+            public int NumberOfIterationsWithoutBenefits { get; set; }
+
+            public ReportProgress(GeneticAlgorithm _genAlg, int _num) {
+                this.GenAlg = _genAlg;
+                this.NumberOfIterationsWithoutBenefits = _num;
+            }
+        }
+
         private void runButton_Click(object sender, EventArgs e)
         {
             Abort = false;
+
+            //validation
+            if (iterationsUpDown.Value < stopAfterUpDown.Value) {
+                stopAfterUpDown.Value = iterationsUpDown.Value;
+            }
+            //validation
+
+
+            // buttons visibility
+            abortButton.Visible = true;
             runButton.Enabled = false;
             progressBar1.Visible = true;
             progressLabel.Visible = true;
             pauseResumeButton.Visible = true;
-            string outRes = "";
+            benefitProgressBar.Visible = true;
+            iterationsWithoutBenefits.Visible = true;
+            //
+
             this.outputBox.Clear();
             if (validateDataTable() && this.dt.Rows.Count >= 2)
-            {
+            {   
+                // progress bars ranges
                 this.progressBar1.Maximum = Convert.ToInt32(this.iterationsUpDown.Value);
                 this.progressBar1.Minimum = 0;
+
+                this.benefitProgressBar.Minimum = 0;
+                this.benefitProgressBar.Maximum = Convert.ToInt32(stopAfterUpDown.Value);
+                //
 
                 List<string> sequencesToAlign = new List<string>();
                 foreach (DataRow row in this.dt.Rows)
@@ -191,30 +220,38 @@ namespace Global_Alignment
                     int mut;
                     int iterations = Convert.ToInt32(iterationsUpDown.Value);
                     genAlg.createRandomPopulation();
+                    int numberOfIterationsWithoutBenefits = 0;
                     for (int it = 0; it < iterations; it++)
-                    {
+                    {   
+                        
+                        if (Abort) {
+                            break;
+                        }
                         if (Active)
-                        {   
+                        {
                             //genetic algorithm
                             genAlg.convertBoolToAlignment();
-                            
-                            //
-                            if (it >= 1)
+
+                            if (it > 0)
                             {
-                                prvBestAligment = genAlg.BestAlignment.Fitness; //report progress
+                                prvBestAligment = genAlg.BestAlignment.Fitness;
                             }
-                            //
 
                             genAlg.fitnessFunction();
-                            
-                            //
-                            BestAlignmentUpToDate = "";
-                            for (int i = 0; i < genAlg.BestAlignment.alignment.Count; i++)
+
+                            if (it >= 1 && prvBestAligment == genAlg.BestAlignment.Fitness)
                             {
-                                BestAlignmentUpToDate += string.Join(" ", genAlg.BestAlignment.alignment[i].ToArray()); // report progress
-                                BestAlignmentUpToDate += Environment.NewLine;
+                                numberOfIterationsWithoutBenefits++;
+                                if (numberOfIterationsWithoutBenefits == stopAfterUpDown.Value)
+                                {
+                                    Abort = true;
+                                }
                             }
-                            //
+                            else
+                            {
+                                numberOfIterationsWithoutBenefits = 0;
+                            }
+
                             genAlg.selection();
                             genAlg.crossover();
                             mut = rnd.Next(0, 101);
@@ -224,42 +261,33 @@ namespace Global_Alignment
                                 genAlg.population[mut] = genAlg.mutation(genAlg.population[mut]);
                             }
 
-
-                            // report progress
-                            if (it >= 1 && genAlg.BestAlignment.Fitness > prvBestAligment)
-                            {
-                                b.ReportProgress(it, ("Best Fitness Up to Date: " + genAlg.BestAlignment.Fitness.ToString()));
-                            }
-                            else if (it == 0)
-                            {
-                                b.ReportProgress(it, ("Best Fitness Up to Date: " + genAlg.BestAlignment.Fitness.ToString()));
-                            }
-                            else
-                            {
-                                b.ReportProgress(it);
-                            }
+                            b.ReportProgress(it, new ReportProgress(genAlg, numberOfIterationsWithoutBenefits));
                         }
-                        else {
+                        else
+                        {
                             Thread.Sleep(100);
                         }
-                        
-
                     }
-                    string output = "";
-                    for (int i = 0; i < genAlg.BestAlignment.alignment.Count; i++) {
-                        output += string.Join(" ", genAlg.BestAlignment.alignment[i].ToArray());
-                        output += Environment.NewLine;
-                    }
-                    outRes = output;
-
                 });
                 // what to do when progress changed (update the progress bar for example)
                 bw.ProgressChanged += new ProgressChangedEventHandler(
                 delegate (object o, ProgressChangedEventArgs args)
                 {
+                    ReportProgress rep = (ReportProgress)args.UserState;
                     this.progressBar1.Value = args.ProgressPercentage;
-                    if (args.UserState != null) {
-                        this.outputBox.Text += args.UserState + Environment.NewLine;
+                    this.benefitProgressBar.Value = rep.NumberOfIterationsWithoutBenefits;
+                    if(rep.NumberOfIterationsWithoutBenefits == stopAfterUpDown.Value) {
+                        this.outputBox.Text += "You've reached max number of iterations without benefits" + Environment.NewLine;
+                    }
+                    if (rep.GenAlg.BestAlignment.Fitness > BestFitnessUpToDate) {
+                        BestFitnessUpToDate = rep.GenAlg.BestAlignment.Fitness;
+                        this.outputBox.Text += "Best Fitness Up To Date: " + BestFitnessUpToDate.ToString()+Environment.NewLine;
+                        BestAlignmentUpToDate = "";
+                        for (int i = 0; i < rep.GenAlg.BestAlignment.alignment.Count; i++)
+                        {
+                            BestAlignmentUpToDate += string.Join(" ", rep.GenAlg.BestAlignment.alignment[i].ToArray());
+                            BestAlignmentUpToDate += Environment.NewLine;
+                        }
                     }
 
                 });
@@ -268,18 +296,21 @@ namespace Global_Alignment
                 bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
                 delegate (object o, RunWorkerCompletedEventArgs args)
                 {
-                    this.outputBox.Text += "DONE!"+Environment.NewLine+outRes;
-                    progressBar1.Visible = false;
-                    progressLabel.Visible = false;
+                    this.outputBox.Text += "DONE!"+Environment.NewLine+BestAlignmentUpToDate;
+                    this.progressBar1.Visible = false;
+                    this.progressLabel.Visible = false;
                     this.runButton.Enabled = true;
                     this.pauseResumeButton.Visible = false;
+                    this.abortButton.Visible = false;
+                    this.benefitProgressBar.Visible = false;
+                    this.iterationsWithoutBenefits.Visible = false;
                 });
 
                 bw.RunWorkerAsync();
 
             }
             else {
-                MessageBox.Show("Data not valid");
+                MessageBox.Show("Incorrect Data");
             }
         }
 
@@ -301,5 +332,6 @@ namespace Global_Alignment
         {
             Abort = true;
         }
+
     }
 }
