@@ -260,12 +260,12 @@ namespace Global_Alignment
 
                             genAlg.selection();
                             genAlg.crossover();
-                            /*mut = rnd.Next(0, 101);
+                            mut = rnd.Next(0, 101);
                             if (mut <= genAlg.ProbabilityOfMutations)
                             {
                                 mut = rnd.Next(0, genAlg.PopulationSize);
                                 genAlg.population[mut] = genAlg.mutation(genAlg.population[mut]);
-                            }*/
+                            }
 
                             b.ReportProgress(it, new ReportProgress(genAlg, numberOfIterationsWithoutBenefits));
                         }
