@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Global_Alignment
 {
@@ -168,6 +169,7 @@ namespace Global_Alignment
             }
         }
 
+
         private void runButton_Click(object sender, EventArgs e)
         {
             Abort = false;
@@ -178,7 +180,10 @@ namespace Global_Alignment
             }
             //validation
 
-
+            chart1.Series.Clear();
+            var s = new Series("Funkcja celu");
+            s.ChartType = SeriesChartType.Point;
+            chart1.Series.Add(s);
             // buttons visibility
             abortButton.Visible = true;
             runButton.Enabled = false;
@@ -187,6 +192,7 @@ namespace Global_Alignment
             pauseResumeButton.Visible = true;
             benefitProgressBar.Visible = true;
             iterationsWithoutBenefits.Visible = true;
+            chart1.Visible = true;
             //
 
             this.outputBox.Clear();
@@ -224,11 +230,6 @@ namespace Global_Alignment
                     for (int it = 0; it < iterations; it++)
                     {
 
-                        //do testow
-                        if (it % 10 == 0) {
-                            ;
-                        }
-                        // koniec
 
                         if (Abort) {
                             break;
@@ -296,6 +297,9 @@ namespace Global_Alignment
                         }
                     }
 
+                    s.Points.AddXY(args.ProgressPercentage + 1, BestFitnessUpToDate);
+                    
+
                 });
 
                 // what to do when worker completes its task (notify the user)
@@ -310,6 +314,8 @@ namespace Global_Alignment
                     this.abortButton.Visible = false;
                     this.benefitProgressBar.Visible = false;
                     this.iterationsWithoutBenefits.Visible = false;
+                    //this.chart1.Visible = false;
+                    
                 });
 
                 bw.RunWorkerAsync();

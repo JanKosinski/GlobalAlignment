@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.inputGroupBox = new System.Windows.Forms.GroupBox();
             this.loadButton = new System.Windows.Forms.Button();
             this.saveToFASTAButton = new System.Windows.Forms.Button();
@@ -52,6 +54,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.inputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -61,6 +64,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.populationSizeUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iterationsUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stopAfterUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // inputGroupBox
@@ -70,7 +74,7 @@
             this.inputGroupBox.Controls.Add(this.saveToFASTAButton);
             this.inputGroupBox.Controls.Add(this.randomButton);
             this.inputGroupBox.Controls.Add(this.dataGridView);
-            this.inputGroupBox.Location = new System.Drawing.Point(36, 12);
+            this.inputGroupBox.Location = new System.Drawing.Point(25, 12);
             this.inputGroupBox.Name = "inputGroupBox";
             this.inputGroupBox.Size = new System.Drawing.Size(1134, 267);
             this.inputGroupBox.TabIndex = 30;
@@ -125,9 +129,9 @@
             this.groupBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.groupBox1.AutoSize = true;
             this.groupBox1.Controls.Add(this.outputBox);
-            this.groupBox1.Location = new System.Drawing.Point(36, 443);
+            this.groupBox1.Location = new System.Drawing.Point(25, 443);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1140, 297);
+            this.groupBox1.Size = new System.Drawing.Size(718, 297);
             this.groupBox1.TabIndex = 32;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output";
@@ -140,7 +144,7 @@
             this.outputBox.Name = "outputBox";
             this.outputBox.ReadOnly = true;
             this.outputBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.outputBox.Size = new System.Drawing.Size(1122, 259);
+            this.outputBox.Size = new System.Drawing.Size(698, 259);
             this.outputBox.TabIndex = 7;
             this.outputBox.WordWrap = false;
             // 
@@ -154,7 +158,7 @@
             this.runGroupBox.Controls.Add(this.runButton);
             this.runGroupBox.Controls.Add(this.pauseResumeButton);
             this.runGroupBox.Controls.Add(this.abortButton);
-            this.runGroupBox.Location = new System.Drawing.Point(410, 301);
+            this.runGroupBox.Location = new System.Drawing.Point(399, 301);
             this.runGroupBox.Name = "runGroupBox";
             this.runGroupBox.Size = new System.Drawing.Size(760, 125);
             this.runGroupBox.TabIndex = 31;
@@ -242,7 +246,7 @@
             this.algParameters.Controls.Add(this.label6);
             this.algParameters.Controls.Add(this.label5);
             this.algParameters.Controls.Add(this.label7);
-            this.algParameters.Location = new System.Drawing.Point(36, 301);
+            this.algParameters.Location = new System.Drawing.Point(25, 301);
             this.algParameters.Name = "algParameters";
             this.algParameters.Size = new System.Drawing.Size(356, 125);
             this.algParameters.TabIndex = 28;
@@ -373,12 +377,26 @@
             this.label7.TabIndex = 19;
             this.label7.Text = "Stop after N Iterations without Benefits";
             // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(767, 443);
+            this.chart1.Name = "chart1";
+            this.chart1.Size = new System.Drawing.Size(374, 300);
+            this.chart1.TabIndex = 33;
+            this.chart1.Text = "chart1";
+            this.chart1.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.ClientSize = new System.Drawing.Size(1209, 739);
+            this.ClientSize = new System.Drawing.Size(1186, 763);
+            this.Controls.Add(this.chart1);
             this.Controls.Add(this.runGroupBox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.algParameters);
@@ -399,6 +417,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.populationSizeUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iterationsUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.stopAfterUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -430,6 +449,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
     }
 }
 
