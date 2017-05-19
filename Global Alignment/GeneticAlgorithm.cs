@@ -139,13 +139,11 @@ namespace Global_Alignment
                 if (population[individual].Fitness > BestFitness)
                 {
                     this.BestFitness = population[individual].Fitness;
-                    Console.WriteLine(BestFitness.ToString());
                     this.BestAlignment = population[individual];
                     this.BestAlignmentLen = lenOfAlignment;
                 }
                 else if (population[individual].Fitness == BestFitness && population[individual].AlignmentLen < BestAlignmentLen) {
                     this.BestFitness = population[individual].Fitness;
-                    Console.WriteLine(BestFitness.ToString());
                     this.BestAlignment = population[individual];
                     this.BestAlignmentLen = lenOfAlignment;
                 }

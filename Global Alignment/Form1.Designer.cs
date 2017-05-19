@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.inputGroupBox = new System.Windows.Forms.GroupBox();
             this.loadButton = new System.Windows.Forms.Button();
             this.saveToFASTAButton = new System.Windows.Forms.Button();
@@ -55,6 +55,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.button1 = new System.Windows.Forms.Button();
             this.inputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -151,6 +152,7 @@
             // runGroupBox
             // 
             this.runGroupBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.runGroupBox.Controls.Add(this.button1);
             this.runGroupBox.Controls.Add(this.iterationsWithoutBenefits);
             this.runGroupBox.Controls.Add(this.progressLabel);
             this.runGroupBox.Controls.Add(this.benefitProgressBar);
@@ -160,7 +162,7 @@
             this.runGroupBox.Controls.Add(this.abortButton);
             this.runGroupBox.Location = new System.Drawing.Point(399, 301);
             this.runGroupBox.Name = "runGroupBox";
-            this.runGroupBox.Size = new System.Drawing.Size(760, 125);
+            this.runGroupBox.Size = new System.Drawing.Size(760, 136);
             this.runGroupBox.TabIndex = 31;
             this.runGroupBox.TabStop = false;
             this.runGroupBox.Text = "Run Section";
@@ -379,16 +381,26 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(767, 443);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(374, 300);
             this.chart1.TabIndex = 33;
             this.chart1.Text = "chart1";
             this.chart1.Visible = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(6, 103);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(107, 23);
+            this.button1.TabIndex = 34;
+            this.button1.Text = "Run Tests";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_2);
             // 
             // Form1
             // 
@@ -450,6 +462,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button button1;
     }
 }
 
