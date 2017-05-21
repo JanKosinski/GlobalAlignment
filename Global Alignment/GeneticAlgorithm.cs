@@ -12,6 +12,7 @@ namespace Global_Alignment
             public List<List<bool>> matrix;
             public List<List<char>> alignment;
             public int Fitness { get; set; }
+            public int MisMatches { get; set; }
             public int AlignmentLen { get; set; } //shorter the better
             public long[] rouletteWheelSelectionRange;
 
@@ -131,6 +132,7 @@ namespace Global_Alignment
                 }
                 floatFit = (1.0 - (Convert.ToDouble(misMatches) / (Convert.ToDouble(SequenceLength) * 2.0))) * 100.0;
                 population[individual].Fitness = Convert.ToInt32(floatFit);
+                population[individual].MisMatches = misMatches;
                 population[individual].AlignmentLen = lenOfAlignment;
                 if (population[individual].Fitness == 0)
                 {

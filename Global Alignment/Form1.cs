@@ -288,7 +288,7 @@ namespace Global_Alignment
                     }
                     if (rep.GenAlg.BestAlignment.Fitness > BestFitnessUpToDate) {
                         BestFitnessUpToDate = rep.GenAlg.BestAlignment.Fitness;
-                        this.outputBox.Text += "Best Fitness Up To Date: " + BestFitnessUpToDate.ToString()+Environment.NewLine;
+                        this.outputBox.Text += "Best Fitness Up To Date: " + BestFitnessUpToDate.ToString()+Environment.NewLine + " MisMatches: "+ rep.GenAlg.BestAlignment.MisMatches;
                         BestAlignmentUpToDate = "";
                         for (int i = 0; i < rep.GenAlg.BestAlignment.alignment.Count; i++)
                         {

@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 public class Test
 {
+    
+
     public List<string> generateRandomSequences(int _numberOfSeq, int _len, int _errors)
     {
         string randomSequence;
@@ -14,16 +17,23 @@ public class Test
         return sequences;
     }
 
-    public void runTest(int _populationSize, List<string> _seqToAlign, int _probOfMutations, int _numOfIterations, int _repeats)
+    public string runTest(int _populationSize, List<string> _seqToAlign, int _probOfMutations, int _numOfIterations, int _repeats, int _errors)
     {
+        GeneticAlgorithm genAlg;
+        Random rnd;
+        int mut;
+        int prvBestAligment;
+        int BestFitnessUpToDate;
+        string result = String.Format("Population Size: {0}; Sequences Aligned {1}; Probability of Mutations {2}; Number of Iterations: {3}; Number of Errors: {4}", _populationSize, _seqToAlign.Count, _probOfMutations, _numOfIterations, _errors) + Environment.NewLine;
         for (int rep = 0; rep < _repeats; rep++)
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            GeneticAlgorithm genAlg = new GeneticAlgorithm(_populationSize, _seqToAlign, _probOfMutations);
+            BestFitnessUpToDate = 0;
+            result += "Repeat" + rep.ToString() + "\t";
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            genAlg = new GeneticAlgorithm(_populationSize, _seqToAlign, _probOfMutations);
             genAlg.createRandomPopulation();
-            int mut;
-            Random rnd = new Random();
-            int prvBestAligment = 0;
+            rnd = new Random();
+            prvBestAligment = 0;
             for (int i = 0; i < _numOfIterations; i++)
             {
                 genAlg.convertBoolToAlignment();
@@ -40,19 +50,52 @@ public class Test
                     mut = rnd.Next(0, genAlg.PopulationSize);
                     genAlg.population[mut] = genAlg.mutation(genAlg.population[mut]);
                 }
+                genAlg.convertBoolToAlignment();
+                genAlg.fitnessFunction();
+                if (genAlg.BestAlignment.Fitness > BestFitnessUpToDate)
+                {
+                    BestFitnessUpToDate = genAlg.BestAlignment.Fitness;
+                }
+                if (i % 100 == 0 || i == 0)
+                {
+                    result += BestFitnessUpToDate + "\t";
+                }
             }
+            result += Environment.NewLine;
+            /*
             Console.WriteLine(genAlg.BestAlignment.Fitness.ToString());
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine(Convert.ToDouble(elapsedMs)/1000.0);
             Console.WriteLine("___________________________");
+            */
         }
+        return result;
     }
 
     public void run()
     {
+        string result = "";
         List<string> sequences;
-        sequences = generateRandomSequences(3, 50, 5);
-        runTest(100, sequences, 3, 100, 2);
+        int errors = 0;
+        int numberOfSequencesToAlign = 3;
+        int seqLen = 50;
+        int populationSize = 100;
+        int probabilityOfMutations = 3;
+        int iterations = 10000;
+        int repeats = 12;
+        sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+        result = runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+
+        OpenFileDialog ofd = new OpenFileDialog();  // wybieramy lokalizacje pliku
+        ofd.CheckFileExists = false;
+        if (ofd.ShowDialog() == DialogResult.OK)
+        {
+            string path = ofd.FileName;
+            System.IO.StreamWriter file = new System.IO.StreamWriter(path);
+            file.WriteLine(result);  // zapisujemy do pliku
+            file.Close();
+            
+        }
     }
 }
