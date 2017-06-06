@@ -6,8 +6,6 @@ using System.Windows.Forms;
 
 public class Test
 {
-    
-
     public List<string> generateRandomSequences(int _numberOfSeq, int _len, int _errors)
     {
         string randomSequence;
@@ -24,9 +22,16 @@ public class Test
         int mut;
         int prvBestAligment;
         int BestFitnessUpToDate;
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        var elapsedMs = watch.ElapsedMilliseconds;
+        double lastElapsedSeconds = 0;
+        double intervalInSeconds = 10;
         string result = String.Format("Population Size: {0}; Sequences Aligned {1}; Probability of Mutations {2}; Number of Iterations: {3}; Number of Errors: {4}", _populationSize, _seqToAlign.Count, _probOfMutations, _numOfIterations, _errors) + Environment.NewLine;
         for (int rep = 0; rep < _repeats; rep++)
         {
+            watch = System.Diagnostics.Stopwatch.StartNew();
+            elapsedMs = watch.ElapsedMilliseconds;
+            lastElapsedSeconds = 0;
             BestFitnessUpToDate = 0;
             result += "Repeat" + rep.ToString() + "\t";
             //var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -56,8 +61,11 @@ public class Test
                 {
                     BestFitnessUpToDate = genAlg.BestAlignment.Fitness;
                 }
-                if (i % 100 == 0 || i == 0)
+                //if (i % 100 == 0 || i == 0)
+                if (Convert.ToDouble(watch.ElapsedMilliseconds) / 1000.0 > lastElapsedSeconds + intervalInSeconds)     
                 {
+                    lastElapsedSeconds = Convert.ToDouble(watch.ElapsedMilliseconds) / 1000.0;
+                    //watch = System.Diagnostics.Stopwatch.StartNew();
                     result += BestFitnessUpToDate + "\t";
                 }
             }
@@ -65,7 +73,7 @@ public class Test
             /*
             Console.WriteLine(genAlg.BestAlignment.Fitness.ToString());
             watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
+            
             Console.WriteLine(Convert.ToDouble(elapsedMs)/1000.0);
             Console.WriteLine("___________________________");
             */
@@ -75,6 +83,7 @@ public class Test
 
     public void run()
     {
+        
         string result = "";
         List<string> sequences;
         int errors = 0;
@@ -83,19 +92,80 @@ public class Test
         int populationSize = 100;
         int probabilityOfMutations = 3;
         int iterations = 10000;
-        int repeats = 12;
-        sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
-        result = runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
-
+        int repeats = 10;
+        
         OpenFileDialog ofd = new OpenFileDialog();  // wybieramy lokalizacje pliku
-        ofd.CheckFileExists = false;
         if (ofd.ShowDialog() == DialogResult.OK)
         {
             string path = ofd.FileName;
             System.IO.StreamWriter file = new System.IO.StreamWriter(path);
+
+            // zaleosc czasowa od liczby sekwencji
+            /*sequences = generateRandomSequences(3, seqLen, errors);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(4, seqLen, errors);
+            result += Environment.NewLine;
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);*/
+            sequences = generateRandomSequences(5, seqLen, errors);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+
+            //result = "";
+            //rozmiar populacji
+            /*
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += runTest(20, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += runTest(50, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += runTest(100, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += runTest(200, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;*/
+
+            //rozna dlugosc sekwencji
+            /*sequences = generateRandomSequences(numberOfSequencesToAlign, 50, errors);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, 75, errors);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, 100, errors);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;*/
+
+            /*sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += runTest(populationSize, sequences, 1, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += runTest(populationSize, sequences, 2, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += runTest(populationSize, sequences, 3, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += runTest(populationSize, sequences, 4, iterations, repeats, errors);
+            result += Environment.NewLine;
+
+            file.WriteLine(result);  // zapisujemy do pliku
+            result = "";*/
+            //liczba bledow
+            /*sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, 0);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, 10);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;
+            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, 20);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            result += Environment.NewLine;*/
+
             file.WriteLine(result);  // zapisujemy do pliku
             file.Close();
-            
-        }
+        }  
     }
 }

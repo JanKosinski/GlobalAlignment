@@ -55,7 +55,7 @@ namespace Global_Alignment
                 Regex fastaRegex = new Regex(@"(>\S+\s+([atgcuryswkmbdhvnATGCURYSWKMBDHVN\s])+){2,}");  // fasta file validation. Fasta file must have at least 2 sequences
                 Match fastaMatch = fastaRegex.Match(text);
                 if (fastaMatch.Value.Trim() != text.Trim()) {
-                    Console.WriteLine("This is not valid fasta format!");
+                    MessageBox.Show("Wrong file format! Please note that fasta header should not contain whitespaces!");
                     return;
                 }
                 // end of fasta validation
@@ -77,7 +77,7 @@ namespace Global_Alignment
                     }
                 }
                 if (names.Count != sequences.Length) {  // additional safety procedure. ?
-                    Console.WriteLine("Wrong file format!"); //?
+                    MessageBox.Show("Wrong file format!"); //?
                     return; //?
                 }
                 for (int j = 0; j< names.Count; j++){
@@ -288,7 +288,7 @@ namespace Global_Alignment
                     }
                     if (rep.GenAlg.BestAlignment.Fitness > BestFitnessUpToDate) {
                         BestFitnessUpToDate = rep.GenAlg.BestAlignment.Fitness;
-                        this.outputBox.Text += "Best Fitness Up To Date: " + BestFitnessUpToDate.ToString()+Environment.NewLine + " MisMatches: "+ rep.GenAlg.BestAlignment.MisMatches;
+                        this.outputBox.Text += "Best Fitness Up To Date: " + BestFitnessUpToDate.ToString() + Environment.NewLine + " MisMatches: " + rep.GenAlg.BestAlignment.MisMatches + Environment.NewLine;
                         BestAlignmentUpToDate = "";
                         for (int i = 0; i < rep.GenAlg.BestAlignment.alignment.Count; i++)
                         {

@@ -32,6 +32,7 @@ namespace Global_Alignment
 
         private void form2_ok_Click(object sender, EventArgs e)
         {
+            this.form1.dt.Rows.Clear();
             List<string> sequences = new List<string>();
             string type = "dna";
             if (dnaCheckBox.Checked)
