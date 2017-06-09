@@ -51,7 +51,7 @@ namespace Global_Alignment
 
         public List<string> sequencesToAlign;
 
-        public void runAlgorithm() {
+        /*public void runAlgorithm() {
             Random rnd = new Random();
             int mut;
             int iterations = 100000;
@@ -68,7 +68,7 @@ namespace Global_Alignment
                 }
                 
             }
-        }
+        }*/
 
         public void createRandomPopulation() {
             population = new List<Individual>();
@@ -232,12 +232,6 @@ namespace Global_Alignment
                         _individual.matrix[row].Insert(j, seqToTranslocate[j - where]);   //wstawiamy
                     }
                 }
-                if (_individual.matrix[row].Count != SequenceLength * 2 || _individual.matrix[row].Count(i=>i.Equals(true)) != SequenceLength) {
-                    Console.WriteLine("Blad przy translokacji");    //sprawdzamy czy wszystko jest ok
-                }
-            }
-            else {
-                Console.WriteLine("BLAD");
             }
 
 
@@ -290,7 +284,7 @@ namespace Global_Alignment
             return newborn;
         }
 
-        public Individual[] recombination(Individual _a, Individual _b) {
+        /*public Individual[] recombination(Individual _a, Individual _b) {
             //CPC crossover operator used
             Individual[] offspring = new Individual[2];
             List<bool> L_up;
@@ -374,7 +368,7 @@ namespace Global_Alignment
             offspring[0] = offspring1;
             offspring[1] = offspring2;
             return offspring;
-        }
+        }*/
 
         public void crossover() {
             int indexA;

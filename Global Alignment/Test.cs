@@ -92,13 +92,22 @@ public class Test
         int populationSize = 100;
         int probabilityOfMutations = 3;
         int iterations = 10000;
-        int repeats = 10;
-        
+        int repeats = 12;
+        //GeneticAlgorithm genAlg;
         OpenFileDialog ofd = new OpenFileDialog();  // wybieramy lokalizacje pliku
         if (ofd.ShowDialog() == DialogResult.OK)
         {
             string path = ofd.FileName;
             System.IO.StreamWriter file = new System.IO.StreamWriter(path);
+
+            /*sequences = generateRandomSequences(5, 50, 0);
+            genAlg = new GeneticAlgorithm(200, sequences, 3);
+            genAlg.createRandomPopulation();
+            genAlg.convertBoolToAlignment();
+            genAlg.fitnessFunction();
+            for (int p = 0; p < genAlg.population.Count; p++) {
+                Console.WriteLine(genAlg.population[p].Fitness);
+            }*/
 
             // zaleosc czasowa od liczby sekwencji
             /*sequences = generateRandomSequences(3, seqLen, errors);
@@ -107,9 +116,9 @@ public class Test
             sequences = generateRandomSequences(4, seqLen, errors);
             result += Environment.NewLine;
             result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);*/
-            sequences = generateRandomSequences(5, seqLen, errors);
+            /*sequences = generateRandomSequences(5, seqLen, errors);
             result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
-            result += Environment.NewLine;
+            result += Environment.NewLine;*./
 
             //result = "";
             //rozmiar populacji
@@ -122,8 +131,8 @@ public class Test
             result += Environment.NewLine;
             sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
             result += runTest(100, sequences, probabilityOfMutations, iterations, repeats, errors);
-            result += Environment.NewLine;
-            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
+            result += Environment.NewLine;*/
+            /*sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, errors);
             result += runTest(200, sequences, probabilityOfMutations, iterations, repeats, errors);
             result += Environment.NewLine;*/
 
@@ -133,8 +142,8 @@ public class Test
             result += Environment.NewLine;
             sequences = generateRandomSequences(numberOfSequencesToAlign, 75, errors);
             result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
-            result += Environment.NewLine;
-            sequences = generateRandomSequences(numberOfSequencesToAlign, 100, errors);
+            result += Environment.NewLine;*/
+            /*sequences = generateRandomSequences(numberOfSequencesToAlign, 100, errors);
             result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
             result += Environment.NewLine;*/
 
@@ -154,18 +163,18 @@ public class Test
             file.WriteLine(result);  // zapisujemy do pliku
             result = "";*/
             //liczba bledow
-            /*sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, 0);
-            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            /*sequences = generateRandomSequences(numberOfSequencesToAlign, 100, 0);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, 0);
             result += Environment.NewLine;
-            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, 10);
-            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
+            sequences = generateRandomSequences(numberOfSequencesToAlign, 100, 5);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, 5);
             result += Environment.NewLine;
-            sequences = generateRandomSequences(numberOfSequencesToAlign, seqLen, 20);
-            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, errors);
-            result += Environment.NewLine;*/
+            sequences = generateRandomSequences(numberOfSequencesToAlign, 100, 10);
+            result += runTest(populationSize, sequences, probabilityOfMutations, iterations, repeats, 10);
+            result += Environment.NewLine;
 
             file.WriteLine(result);  // zapisujemy do pliku
-            file.Close();
+            file.Close();*/
         }  
     }
 }

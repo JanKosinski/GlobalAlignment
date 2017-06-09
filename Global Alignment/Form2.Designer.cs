@@ -73,7 +73,7 @@
             this.seqLenNumericUpDown.Size = new System.Drawing.Size(120, 20);
             this.seqLenNumericUpDown.TabIndex = 1;
             this.seqLenNumericUpDown.Value = new decimal(new int[] {
-            10,
+            25,
             0,
             0,
             0});
@@ -126,7 +126,7 @@
             this.numberOfSequencesNumericUpDown.Size = new System.Drawing.Size(60, 20);
             this.numberOfSequencesNumericUpDown.TabIndex = 8;
             this.numberOfSequencesNumericUpDown.Value = new decimal(new int[] {
-            2,
+            3,
             0,
             0,
             0});

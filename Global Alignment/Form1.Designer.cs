@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.inputGroupBox = new System.Windows.Forms.GroupBox();
             this.loadButton = new System.Windows.Forms.Button();
             this.saveToFASTAButton = new System.Windows.Forms.Button();
@@ -300,7 +300,7 @@
             this.populationSizeUpDown.Size = new System.Drawing.Size(120, 20);
             this.populationSizeUpDown.TabIndex = 12;
             this.populationSizeUpDown.Value = new decimal(new int[] {
-            100,
+            50,
             0,
             0,
             0});
@@ -349,7 +349,7 @@
             this.stopAfterUpDown.Size = new System.Drawing.Size(120, 20);
             this.stopAfterUpDown.TabIndex = 18;
             this.stopAfterUpDown.Value = new decimal(new int[] {
-            1000,
+            2000,
             0,
             0,
             0});
@@ -392,10 +392,10 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(767, 443);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(374, 300);

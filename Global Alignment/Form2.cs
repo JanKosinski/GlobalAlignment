@@ -75,11 +75,18 @@ namespace Global_Alignment
                 this.form1.Enabled = true;
                 this.Close();
             }
-            else { } //TODO change label color where condition is not fulfilled
+            else { } 
         }
 
         private bool validateFields() {
-            
+            if (Convert.ToInt32(errorsNumUpDown.Value) >= (Convert.ToInt32(seqLenNumericUpDown.Value)/2)*Convert.ToInt32(numberOfSequencesNumericUpDown.Value)) {
+                MessageBox.Show("Number of errors shuld be smaller than half of the sequence length multiplied by number of aligned sequences");
+                return false;
+            }
+            if (Convert.ToString(refSeqTextBox.Text).ToUpper().Contains("U") && Convert.ToString(refSeqTextBox.Text).ToUpper().Contains("T")) {
+                MessageBox.Show("Reference sequence contains U and T");
+                return false;
+            }
             if (randomSequenceRadioButton.Checked) { return true; }
             else if (refSeqTextBox.Text.Length >= 10) {
                 Regex sequenceRegex = new Regex(@"^[atgcuryswkmbdhvnATGCURYSWKMBDHVN\s]+$");
@@ -90,9 +97,11 @@ namespace Global_Alignment
                 }
                 else
                 {
+                    MessageBox.Show("You have entered invalid reference sequence!");
                     return false;
                 }
-            } // TODO checks if sequence doesnt contain U and T at one time
+            }
+            MessageBox.Show("Your reference sequence should have at least 10 nucleotides");
             return false;
         }
 

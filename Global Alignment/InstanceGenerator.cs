@@ -42,7 +42,6 @@ namespace Global_Alignment
                 sb = new StringBuilder(sequences[randomNumberSeq]);
                 sb[randomNumberNuc] = substitute(sb[randomNumberNuc], _type);
                 sequences[randomNumberSeq] = sb.ToString();
-                //TODO wstawianie zadanej liczby bledow do sekwencji. Tylko substytucje (by była możliwość rzetelnej oceny jakości rozwiązania)
             }
             return sequences;
         }

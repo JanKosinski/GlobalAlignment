@@ -36,6 +36,7 @@ namespace Global_Alignment
         volatile bool Abort = false;
 
         volatile string BestAlignmentUpToDate = "";
+        volatile int BestMisMatchesUpToDate;
         volatile int BestFitnessUpToDate = 0;
 
         private void randomButton_Click(object sender, EventArgs e)
@@ -46,9 +47,10 @@ namespace Global_Alignment
         }
 
         private void loadButton_Click(object sender, EventArgs e)
-        {
+        {   
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == DialogResult.OK) {
+                dt.Clear();
                 string path = ofd.FileName;
                 string text = File.Exists(path) ? System.IO.File.ReadAllText(path) : "File doesn't exist error";    // reading from file; if file does not exist insert to text error message
                 if (text == "File doesn't exist error") { Console.WriteLine("File doesn't exist");  return;  }  // if file does not exist
@@ -88,7 +90,7 @@ namespace Global_Alignment
 
 
 
-        private bool validateDataTable() {  // sprawdza czy arkusz nie zawiera błedów. Jeżeli zawiera to zakreśl wiersz na czerwono
+        private bool validateDataTable(bool checkNonEmptyRows = false) {  // sprawdza czy arkusz nie zawiera błedów. Jeżeli zawiera to zakreśl wiersz na czerwono
             int seqLen;
             try
             {
@@ -120,6 +122,25 @@ namespace Global_Alignment
                     }
                 }            
             }
+            //sprawdzanie ilosci niepustych wierszy
+            if (checkNonEmptyRows)
+            {
+                string sequences = "";
+                int nonEmptyRowsNum = 0;
+                foreach (DataGridViewRow row in this.dataGridView.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        sequences += row.Cells[1].Value.ToString();
+                        nonEmptyRowsNum++;
+                    }
+                }
+                if (sequences.ToUpper().Contains("U") && sequences.ToUpper().Contains("T")) {
+                    MessageBox.Show("Your sequences contains U and T");
+                    return false;
+                }
+                if (nonEmptyRowsNum < 2) { MessageBox.Show("You should have at least 2 non empty rows"); return false; }
+            }
             if (temp) {
                 return false;
             }
@@ -128,7 +149,7 @@ namespace Global_Alignment
 
         private void saveToFASTAButton_Click(object sender, EventArgs e)    // zapis do pliku fasta
         {
-            if (validateDataTable())    // jezeli datgridview nie zawiera bledow
+            if (validateDataTable(true))    // jezeli datgridview nie zawiera bledow
             {
                 OpenFileDialog ofd = new OpenFileDialog();  // wybieramy lokalizacje pliku
                 ofd.CheckFileExists = false;
@@ -172,6 +193,10 @@ namespace Global_Alignment
 
         private void runButton_Click(object sender, EventArgs e)
         {
+            BestFitnessUpToDate = 0;
+            BestAlignmentUpToDate = "";
+            //BestMisMatchesUpToDate = 99999;
+            if (!validateDataTable(true)) { MessageBox.Show("There are some errors in DataGridView"); return;  }
             Abort = false;
 
             //validation
@@ -193,10 +218,17 @@ namespace Global_Alignment
             benefitProgressBar.Visible = true;
             iterationsWithoutBenefits.Visible = true;
             chart1.Visible = true;
+            abortButton.Enabled = true;
+            progressBar1.Enabled = true;
+            progressLabel.Enabled = true;
+            pauseResumeButton.Enabled = true;
+            benefitProgressBar.Enabled = true;
+            iterationsWithoutBenefits.Enabled = true;
+            //chart1.Enabled = true;
             //
 
             this.outputBox.Clear();
-            if (validateDataTable() && this.dt.Rows.Count >= 2)
+            if (this.dt.Rows.Count >= 2)
             {   
                 // progress bars ranges
                 this.progressBar1.Maximum = Convert.ToInt32(this.iterationsUpDown.Value);
@@ -211,7 +243,8 @@ namespace Global_Alignment
                 {
                     sequencesToAlign.Add(row["Sequence"].ToString());
                 }
-                GeneticAlgorithm genAlg = new GeneticAlgorithm(100, sequencesToAlign, 3);
+                
+                GeneticAlgorithm genAlg = new GeneticAlgorithm(Convert.ToInt32(populationSizeUpDown.Value), sequencesToAlign, Convert.ToInt32(probabilityOfMutationsUpDown.Value));
 
                 BackgroundWorker bw = new BackgroundWorker();
                 // this allows our worker to report progress during work
@@ -272,9 +305,13 @@ namespace Global_Alignment
                         }
                         else
                         {
-                            Thread.Sleep(100);
+                            while (!Active)
+                            {
+                                Thread.Sleep(100);
+                            }
                         }
                     }
+                    
                 });
                 // what to do when progress changed (update the progress bar for example)
                 bw.ProgressChanged += new ProgressChangedEventHandler(
@@ -294,6 +331,7 @@ namespace Global_Alignment
                         {
                             BestAlignmentUpToDate += string.Join(" ", rep.GenAlg.BestAlignment.alignment[i].ToArray());
                             BestAlignmentUpToDate += Environment.NewLine;
+                            BestMisMatchesUpToDate = rep.GenAlg.BestAlignment.MisMatches;
                         }
                     }
 
@@ -305,17 +343,18 @@ namespace Global_Alignment
                 // what to do when worker completes its task (notify the user)
                 bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
                 delegate (object o, RunWorkerCompletedEventArgs args)
-                {
-                    this.outputBox.Text += "DONE!"+Environment.NewLine+BestAlignmentUpToDate;
-                    this.progressBar1.Visible = false;
-                    this.progressLabel.Visible = false;
+                {   
+                    this.outputBox.Text += "DONE!"+Environment.NewLine+BestAlignmentUpToDate+Environment.NewLine;
+                    this.outputBox.Text += "MisMatches: " +BestMisMatchesUpToDate.ToString();
+                    this.progressBar1.Enabled = false;
+                    this.progressLabel.Enabled = false;
+                    this.pauseResumeButton.Enabled = false;
+                    this.abortButton.Enabled = false;
+                    this.benefitProgressBar.Enabled = false;
+                    this.iterationsWithoutBenefits.Enabled = false;
                     this.runButton.Enabled = true;
-                    this.pauseResumeButton.Visible = false;
-                    this.abortButton.Visible = false;
-                    this.benefitProgressBar.Visible = false;
-                    this.iterationsWithoutBenefits.Visible = false;
                     //this.chart1.Visible = false;
-                    
+
                 });
 
                 bw.RunWorkerAsync();
@@ -331,11 +370,14 @@ namespace Global_Alignment
             if (pauseResumeButton.Text == "Pause")
             {
                 Active = false;
+                abortButton.Enabled = false;
                 pauseResumeButton.Text = "Resume";
                 this.outputBox.Text = "Best Alignment Up to Date:" + Environment.NewLine + BestAlignmentUpToDate + Environment.NewLine;
+                this.outputBox.Text += "MisMatches: " + BestMisMatchesUpToDate.ToString() + Environment.NewLine;
             }
             else {
                 Active = true;
+                abortButton.Enabled = true;
                 pauseResumeButton.Text = "Pause";
             }
         }
