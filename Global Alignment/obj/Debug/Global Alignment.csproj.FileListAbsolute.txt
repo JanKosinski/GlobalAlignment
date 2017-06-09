@@ -1,0 +1,10 @@
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\bin\Debug\Global Alignment.exe.config
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\bin\Debug\Global Alignment.exe
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\bin\Debug\Global Alignment.pdb
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\obj\Debug\Global Alignment.csprojResolveAssemblyReference.cache
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\obj\Debug\Global_Alignment.Properties.Resources.resources
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\obj\Debug\Global Alignment.csproj.GenerateResource.Cache
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\obj\Debug\Global Alignment.exe
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\obj\Debug\Global Alignment.pdb
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\obj\Debug\Global_Alignment.Form1.resources
+C:\Users\SAMSUNG\Source\Repos\GlobalAlignment\Global Alignment\Global Alignment\obj\Debug\Global_Alignment.Form2.resources

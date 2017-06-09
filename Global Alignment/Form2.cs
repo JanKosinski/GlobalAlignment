@@ -79,7 +79,12 @@ namespace Global_Alignment
         }
 
         private bool validateFields() {
-            if (Convert.ToInt32(errorsNumUpDown.Value) >= (Convert.ToInt32(seqLenNumericUpDown.Value)/2)*Convert.ToInt32(numberOfSequencesNumericUpDown.Value)) {
+            if (!referenceSequenceRadioButton.Checked && Convert.ToInt32(errorsNumUpDown.Value) >= (Convert.ToInt32(seqLenNumericUpDown.Value)/2)*Convert.ToInt32(numberOfSequencesNumericUpDown.Value)) {
+                MessageBox.Show("Number of errors shuld be smaller than half of the sequence length multiplied by number of aligned sequences");
+                return false;
+            }
+            if (referenceSequenceRadioButton.Checked && Convert.ToInt32(errorsNumUpDown.Value) >= ((refSeqTextBox.Text.Length/2) / 2) * Convert.ToInt32(numberOfSequencesNumericUpDown.Value))
+            {
                 MessageBox.Show("Number of errors shuld be smaller than half of the sequence length multiplied by number of aligned sequences");
                 return false;
             }

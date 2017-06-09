@@ -30,12 +30,24 @@ namespace Global_Alignment
             StringBuilder sb;
             int randomNumberSeq;
             int randomNumberNuc;
+            bool temp = false;
             for (int i = 0; i < _numOfErrors; i++) {
                 randomNumberSeq = rnd.Next(sequences.Count);
                 randomNumberNuc = rnd.Next(sequences[0].Length);
-                while (randomNumSeq.Contains(randomNumberSeq) && randomNumNuc.Contains(randomNumberNuc)) {
+                temp = false;
+                while (true)
+                {
+                    for (int k = 0; k < randomNumSeq.Count; k++)
+                    {
+                        if (randomNumberSeq == randomNumSeq[k] && randomNumberNuc == randomNumNuc[k]) {
+                            temp = true;
+                        }
+                    }
+                    if (!temp) { break; }
+                    else { temp = false; }
                     randomNumberSeq = rnd.Next(sequences.Count);
                     randomNumberNuc = rnd.Next(sequences[0].Length);
+
                 }
                 randomNumSeq.Add(randomNumberSeq);
                 randomNumNuc.Add(randomNumberNuc);

@@ -228,6 +228,10 @@
             this.Controls.Add(this.refSeqTextBox);
             this.Controls.Add(this.seqLenNumericUpDown);
             this.Controls.Add(this.label1);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(386, 314);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(386, 314);
             this.Name = "Form2";
             this.Text = "Random Input";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
